@@ -11,19 +11,6 @@ class SAMLSettingsError(Exception):
     pass
 
 
-def strip_pem(string):
-    """
-    Take a pem formated file and return as a single string
-    as required by python-saml
-    """
-    string = string.replace('\n', '').replace('\r', '')
-    if 'CERTIFICATE' in string:
-        return string.lstrip('-----BEGIN CERTIFICATE-----').rstrip('-----END CERTIFICATE-----')
-    elif 'RSA' in string:
-        return string.lstrip('-----BEGIN RSA PRIVATE KEY-----').rstrip('-----END RSA PRIVATE KEY-----')
-    elif 'PRIVATE' in string:
-        return string.lstrip('-----BEGIN PRIVATE KEY-----').rstrip('-----END PRIVATE KEY-----')
-
 def get_provider_config(req):
     final_cfg = {}
     base_cfg = None
