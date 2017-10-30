@@ -3,6 +3,7 @@ from django.test.utils import override_settings
 from django.conf import settings
 from django.test import RequestFactory
 from django_saml2_pro_auth.auth import get_clean_map, get_provider_index
+from django_saml2_pro_auth.utils import SAMLError
 
 class TestAuthFns(unittest.TestCase):
     settings.configure()
@@ -22,6 +23,17 @@ class TestAuthFns(unittest.TestCase):
         provider2, index2 = get_provider_index(request2)
         self.assertEqual(provider2, '2ndProvider')
         self.assertEqual(index2, 1)
+
+    def test_get_provider_index_missing_query_str(self):
+        r2_factory = RequestFactory()
+        request2 = r2_factory.get('/sso/saml/')
+        self.assertRaises(SAMLError, get_provider_index, request2)
+
+    @override_settings(SAML_PROVIDERS=[{'MyProvider': dict()},{'2ndProvider': dict()}])
+    def test_get_provider_index_not_in_settings(self):
+        r2_factory = RequestFactory()
+        request2 = r2_factory.get('/sso/saml/?provider=BadProvider')
+        self.assertRaises(SAMLError, get_provider_index, request2)
 
     def test_mapping_users_with_index_values(self):
         user_map = {
@@ -63,22 +75,25 @@ class TestAuthFns(unittest.TestCase):
         self.assertEqual(merged_map['email'], 'montypython@example.com')
         self.assertEqual(merged_map['name'], 'montypython')
 
-    def test_mapping_users_without_mixed_value_styles(self):
+    def test_mapping_users_with_mixed_value_styles(self):
         user_map = {
             'email': 'Email',
             'name': {
                 'index': 1,
                 'key': 'Username'
-            }
+            },
+            'customer': {'key': 'Client'}
         }
 
         saml_map = {
             'Username': ['','montypython'],
             'lastName': 'Cleese',
             'Email': 'montypython@example.com',
-            'firstName': 'John'
+            'firstName': 'John',
+            'Client': 'examplecorp'
         }
 
         merged_map = get_clean_map(user_map, saml_map)
         self.assertEqual(merged_map['email'], 'montypython@example.com')
         self.assertEqual(merged_map['name'], 'montypython')
+        self.assertEqual(merged_map['customer'], 'examplecorp')

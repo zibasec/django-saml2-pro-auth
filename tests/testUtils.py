@@ -7,6 +7,7 @@ from django_saml2_pro_auth.utils import get_provider_config, init_saml_auth, pre
 
 import onelogin
 from .data.configs import MOCK_SAML2_CONFIG
+from django_saml2_pro_auth.utils import SAMLError, SAMLSettingsError
 
 
 class TestSAML2ConfigUtils(unittest.TestCase):
@@ -17,6 +18,19 @@ class TestSAML2ConfigUtils(unittest.TestCase):
         req = prepare_django_request(request)
         auth_obj = init_saml_auth(req)
         self.assertTrue(type(auth_obj) is onelogin.saml2.auth.OneLogin_Saml2_Auth)
+
+    def test_get_provider_config_with_missing_query_str(self):
+        r = RequestFactory()
+        request = r.get('/sso/saml/', **dict(HTTP_HOST='example.com'))
+        req = prepare_django_request(request)
+        self.assertRaises(SAMLError, get_provider_config, req)
+
+    @override_settings(SAML_PROVIDERS=MOCK_SAML2_CONFIG)
+    def test_get_provider_config_with_missing_provider(self):
+        r = RequestFactory()
+        request = r.get('/sso/saml/?provider=MissingProvider', **dict(HTTP_HOST='example.com'))
+        req = prepare_django_request(request)
+        self.assertRaises(SAMLSettingsError, get_provider_config, req)
 
     @override_settings(SAML_PROVIDERS=MOCK_SAML2_CONFIG)
     def test_get_provider_config(self):
