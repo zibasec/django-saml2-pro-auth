@@ -19,18 +19,18 @@ def strip_pem(string):
 
 def get_provider_config(req):
     final_cfg = {}
-    base_config = None
+    base_cfg = None
     try:
         provider = req['get_data']['provider']
     except KeyError:
         raise SAMLError("No provider specified in request")
 
-    for index, provider in enumerate(settings.SAML_PROVIDERS):
-        if provider.keys()[0] == provider:
+    for index, provider_obj in enumerate(settings.SAML_PROVIDERS):
+        if provider_obj.keys()[0] == provider:
             base_cfg = settings.SAML_PROVIDERS[index][provider]
             break
 
-    if not base_config:
+    if not base_cfg:
         raise SAMLSettingsError("Provider %s was not found in settings" % provider)
 
     final_cfg = base_cfg
