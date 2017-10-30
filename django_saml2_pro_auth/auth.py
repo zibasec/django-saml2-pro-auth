@@ -7,7 +7,6 @@ from onelogin.saml2.auth import OneLogin_Saml2_Auth
 
 from .utils import SAMLError, prepare_django_request
 
-User = get_user_model()
 
 def get_provider_index(request):
     """Helper to get the saml config index of a provider in order to grab
@@ -25,7 +24,6 @@ def get_provider_index(request):
     raise SAMLError("The provider: %s was not found in settings.py" % provider)
 
 def get_clean_map(user_map, saml_data):
-
     final_map = dict()
     for usr_k, usr_v in user_map.iteritems():
         if type(usr_v) is dict:
@@ -46,6 +44,7 @@ class Backend(object):
         if not request.session['samlSessionIndex'] or not request.session['samlUserdata']:
             return None
 
+        User = get_user_model()
         provider, provider_index = get_provider_index(request)
         user_map = settings.SAML_USERS_MAP[provider_index][provider]
 
@@ -57,6 +56,7 @@ class Backend(object):
         return user
 
     def get_user(self, user_id):
+        User = get_user_model()
         try:
             return User.objects.get(pk=user_id)
         except User.DoesNotExist:
