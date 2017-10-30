@@ -47,18 +47,30 @@ def init_saml_auth(req):
     return auth
 
 def prepare_django_request(request):
-    # TODO: add settings.py support for HTTP_X_FORWADED
-    # If server is behind proxys or balancers use the HTTP_X_FORWARDED fields
-    result = {
-        'https': 'on' if request.is_secure() else 'off',
-        'http_host': request.META['HTTP_HOST'],
+    http_host = request.META.get('HTTP_HOST', None)
+
+    if 'HTTP_X_FORWARDED_FOR' in request.META:
+        server_port = None
+        https = request.META.get('HTTP_X_FORWARDED_PROTO') == 'https'
+    else:
+        server_port = request.META.get('SERVER_PORT')
+        https = request.is_secure()
+
+    results = {
+        'https': 'on' if https else 'off',
+        'http_host': http_host,
         'script_name': request.META['PATH_INFO'],
-        'server_port': request.META['SERVER_PORT'],
         'get_data': request.GET.copy(),
         'post_data': request.POST.copy(),
+        'query_string': request.META['QUERY_STRING']
         # TODO: add this as a config item for settings.py
         # Uncomment if using ADFS as IdP, https://github.com/onelogin/python-saml/pull/144
         # 'lowercase_urlencoding': True,
-        'query_string': request.META['QUERY_STRING']
     }
-    return result
+
+    if server_port:
+        # Empty port will make a (lonely) colon ':' appear on the URL, so
+        # it's better not to include it at all.
+        results['server_port'] = server_port
+
+    return results
