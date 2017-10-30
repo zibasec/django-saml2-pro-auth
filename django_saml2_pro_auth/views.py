@@ -48,8 +48,13 @@ def saml_login(request):
         else:
             raise SAMLError('ERRORS FOUND IN SAML REQUEST: %s' % errors)
     elif 'provider' in req['get_data']:
-        redir = OneLogin_Saml2_Utils.get_self_url(req)
-        return HttpResponseRedirect(auth.login(redir))
+        if hasattr(settings, 'SAML_REDIRECT'):
+            return HttpResponseRedirect(auth.login(settings.SAML_REDIRECT))
+        elif 'RelayState' in req['post_data']:
+                return HttpResponseRedirect(auth.redirect_to(req['post_data']['RelayState']))
+        else:
+            redir = OneLogin_Saml2_Utils.get_self_url(req)
+            return HttpResponseRedirect(auth.login(redir))
     else:
         return HttpResponseRedirect(auth.login())
 
