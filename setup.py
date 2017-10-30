@@ -39,9 +39,16 @@ setup(
     keywords='authentication saml saml2 django development',
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     install_requires=[saml_package],
+    test_suite='tests',
     extras_require={
         'dev': ['check-manifest'],
-        'test': ['coverage'],
+        'test': [
+            'coverage',
+            'pylint',
+            'pep8',
+            'pyflakes',
+            'coveralls'
+        ],
     },
 
 )
