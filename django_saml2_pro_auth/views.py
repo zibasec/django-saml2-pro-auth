@@ -20,6 +20,7 @@ def saml_login(request):
     attributes = None
     req = prepare_django_request(request)
     auth = init_saml_auth(req)
+
     if 'acs' in req['get_data']:
         request_id = None
 
@@ -46,7 +47,9 @@ def saml_login(request):
                 return HttpResponseRedirect(OneLogin_Saml2_Utils.get_self_url(req))
         else:
             raise SAMLError('ERRORS FOUND IN SAML REQUEST: %s' % errors)
-
+    elif 'provider' in req['get_data']:
+        redir = OneLogin_Saml2_Utils.get_self_url(req)
+        return HttpResponseRedirect(auth.login(redir))
     else:
         return HttpResponseRedirect(auth.login())
 

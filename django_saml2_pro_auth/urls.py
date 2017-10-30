@@ -7,7 +7,7 @@ from . import views
 
 
 SAML_ROUTE = settings.SAML_ROUTE
-AUTH = r'^' + SAML_ROUTE + '/$'
+AUTH = r'^' + SAML_ROUTE + '$'
 METADATA = r'^' + SAML_ROUTE + 'metadata/$'
 
 urlpatterns = [

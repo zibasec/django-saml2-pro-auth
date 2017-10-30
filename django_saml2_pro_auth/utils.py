@@ -1,6 +1,7 @@
 from django.conf import settings
 
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
+from onelogin.saml2.utils import OneLogin_Saml2_Utils 
 
 
 class SAMLError(Exception):
@@ -15,7 +16,13 @@ def strip_pem(string):
     Take a pem formated file and return as a single string
     as required by python-saml
     """
-    return string.replace('\n', '').replace('\r', '').lstrip('-----BEGIN CERTIFICATE-----').lstrip('-----BEGIN PRIVATE KEY-----').rstrip('-----END CERTIFICATE-----').lstrip('-----END PRIVATE KEY-----')
+    string = string.replace('\n', '').replace('\r', '')
+    if 'CERTIFICATE' in string:
+        return string.lstrip('-----BEGIN CERTIFICATE-----').rstrip('-----END CERTIFICATE-----')
+    elif 'RSA' in string:
+        return string.lstrip('-----BEGIN RSA PRIVATE KEY-----').rstrip('-----END RSA PRIVATE KEY-----')
+    elif 'PRIVATE' in string:
+        return string.lstrip('-----BEGIN PRIVATE KEY-----').rstrip('-----END PRIVATE KEY-----')
 
 def get_provider_config(req):
     final_cfg = {}
@@ -34,9 +41,9 @@ def get_provider_config(req):
         raise SAMLSettingsError("Provider %s was not found in settings" % provider)
 
     final_cfg = base_cfg
-    final_cfg['sp']['x509cert'] = strip_pem(final_cfg['sp']['x509cert'])
-    final_cfg['sp']['privateKey'] = strip_pem(final_cfg['sp']['privateKey'])
-    final_cfg['idp']['x509cert'] = strip_pem(final_cfg['idp']['x509cert'])
+    final_cfg['sp']['x509cert'] = OneLogin_Saml2_Utils.format_cert(final_cfg['sp']['x509cert'])
+    final_cfg['sp']['privateKey'] = OneLogin_Saml2_Utils.format_private_key(final_cfg['sp']['privateKey'])
+    final_cfg['idp']['x509cert'] = OneLogin_Saml2_Utils.format_cert(final_cfg['idp']['x509cert'])
 
     return final_cfg
 
