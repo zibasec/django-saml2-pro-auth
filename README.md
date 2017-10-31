@@ -40,7 +40,7 @@ SAML_ROUTE = 'sso/saml/'
 SAML_REDIRECT = '/'
 
 SAML_USERS_MAP = [{
-    "centrify" : {
+    "MyProvider" : {
       "email": dict(key="Email", index=0),
       "name": dict(key="Username", index=0)
     }
@@ -49,7 +49,7 @@ SAML_USERS_MAP = [{
 
 
 SAML_PROVIDERS = [{
-    "centrify": {
+    "MyProvider": {
         "strict": True,
         "debug": False,
         "sp": {
@@ -67,16 +67,16 @@ SAML_PROVIDERS = [{
             "privateKey": open(os.path.join(BASE_DIR,'certs/sp.key'), 'r').read(),
         },
         "idp": {
-            "entityId": "https://aak0333.my.centrify.com/0f3172cf-5aa6-40f4-8023-baf9d0996cec",
+            "entityId": "https://kdkdfjdfsklj.my.MyProvider.com/0f3172cf-5aa6-40f4-8023-baf9d0996cec",
             "singleSignOnService": {
-                "url": "https://aak0333.my.centrify.com/applogin/appKey/0f3172cf-5aa6-40f4-8023-baf9d0996cec/customerId/AAK0333",
+                "url": "https://kdkdfjdfsklj.my.MyProvider.com/applogin/appKey/0f3172cf-5aa6-40f4-8023-baf9d0996cec/customerId/kdkdfjdfsklj",
                 "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
             },
             "singleLogoutService": {
-                "url": "https://aak0333.my.centrify.com/applogout",
+                "url": "https://kdkdfjdfsklj.my.MyProvider.com/applogout",
                 "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
             },
-            "x509cert": open(os.path.join(BASE_DIR,'certs/centrify.crt'), 'r').read(),
+            "x509cert": open(os.path.join(BASE_DIR,'certs/MyProvider.crt'), 'r').read(),
         },
         "organization": {
             "en-US": {
