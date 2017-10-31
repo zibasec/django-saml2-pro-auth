@@ -27,7 +27,13 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            coverage run --source src/django_saml2_pro_auth setup.py test -d ./test-reports
+            coverage run --source src/django_saml2_pro_auth setup.py test
+      - run:
+          name: run report
+          command: |
+            . venv/bin/activate
+
+            coverage html -d $CIRCLE_ARTIFACTS
 
       - store_artifacts:
           path: test-reports
