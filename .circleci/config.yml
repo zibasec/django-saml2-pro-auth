@@ -17,8 +17,12 @@ jobs:
             sudo apt-get install libxmlsec1 xmlsec1 libxmlsec1-openssl libxmlsec1-dev
       - run:
           command: |
-            pip install coverage virtualenv
+            pip install virtualenv
             virtualenv venv
+      - run:
+          command: |
+            . venv/bin/activate
+            pip install coverage
       - run:
           name: run tests
           command: |
