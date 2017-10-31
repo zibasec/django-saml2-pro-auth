@@ -29,6 +29,11 @@ jobs:
             . venv/bin/activate
             coverage run --source src/django_saml2_pro_auth setup.py test
       - run:
+          name: run coveralls
+          command: |
+            . venv/bin/activate
+            coveralls
+      - run:
           name: run report
           command: |
             . venv/bin/activate
