@@ -23,7 +23,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            python setup.py test
+            coverage run --source src/django_saml2_pro_auth setup.py test -d ./test-reports
 
       - store_artifacts:
           path: test-reports
