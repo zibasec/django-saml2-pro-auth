@@ -10,7 +10,7 @@ from .data.configs import MOCK_SAML2_CONFIG
 from django_saml2_pro_auth.utils import SAMLError, SAMLSettingsError
 
 
-class TestSAML2ConfigUtils(unittest.TestCase):
+class TestUtils(unittest.TestCase):
     @override_settings(SAML_PROVIDERS=MOCK_SAML2_CONFIG)
     def test_init_saml_auth(self):
         r = RequestFactory()
