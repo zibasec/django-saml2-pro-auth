@@ -14,7 +14,8 @@ jobs:
       - checkout
       - run:
           command: |
-            python -m venv venv
+            pip install virtualenv
+            virtualenv venv
       - run:
           name: run tests
           command: |
