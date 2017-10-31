@@ -32,8 +32,7 @@ jobs:
           name: run report
           command: |
             . venv/bin/activate
-
-            coverage html -d $CIRCLE_ARTIFACTS
+            coverage html -d ./test-reports/ 
 
       - store_artifacts:
           path: test-reports
