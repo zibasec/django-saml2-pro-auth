@@ -44,16 +44,16 @@ if __name__ == "__main__":
             '': 'src',
         },
         install_requires=[saml_package],
+        tests_require=[
+            'django',
+            'coverage',
+            'pylint',
+            'pep8',
+            'pyflakes',
+            'coveralls'
+        ],
         extras_require={
             'dev': ['check-manifest'],
-            'test': [
-                'django',
-                'coverage',
-                'pylint',
-                'pep8',
-                'pyflakes',
-                'coveralls'
-            ],
         },
         test_suite='tests',
         include_package_data=True,
