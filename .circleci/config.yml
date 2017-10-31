@@ -22,7 +22,7 @@ jobs:
       - run:
           command: |
             . venv/bin/activate
-            pip install coverage
+            pip install coverage coveralls
       - run:
           name: run tests
           command: |
