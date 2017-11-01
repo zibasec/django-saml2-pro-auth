@@ -3,8 +3,6 @@ jobs:
   build:
     docker:
       - image: nousdefions/tox:1.0
-<<<<<<< HEAD
-=======
     working_directory: ~/repo
     steps:
       - run:
@@ -14,17 +12,13 @@ jobs:
   testpy34:
     docker:
       - image: nousdefions/tox:1.0
->>>>>>> new parallel try
     working_directory: ~/repo
     steps:
-<<<<<<< HEAD
       - checkout
       - run:
           name: 2.7 Tests 
           command: |
             tox -e py27-18,py27-110,py27-111
-=======
->>>>>>> new parallel try
 
       - run:
           name: 3.4 Tests 
@@ -52,8 +46,6 @@ jobs:
           command: |
             tox -e py36-111
 
-<<<<<<< HEAD
-=======
 workflows:
   version: 2
   test_pys:
@@ -62,7 +54,6 @@ workflows:
       - testpy34
       - testpy35
       - testpy36
->>>>>>> new parallel try
 
 
 #      - run:
