@@ -5,6 +5,7 @@ jobs:
       - image: nousdefions/tox:1.0
     working_directory: ~/repo
     steps:
+      - checkout
       - run:
           name: 2.7 Tests 
           command: |
