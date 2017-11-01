@@ -1,5 +1,3 @@
-# CURRENTLY PRE-RELEASE. TESTS ARE STILL BEING BUILT.
-
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/MindPointGroup/django-saml2-pro-auth/master/LICENSE)
 
 
@@ -12,9 +10,15 @@ SAML2 authentication backend for Django
 
 ## Installation
 
+`pip install django-saml2-pro-auth`
+
 ### Prerequisites
 
-On your OS you must install xmlsec1 and openssl (dev packages where available). The package name will vary by OS.
+On your OS you must install libxml, xmlsec1 and openssl (dev packages where available). The package name will vary by OS.
+
+For example, on Ubuntu the prerequisite package names are `build-essential libssl-dev libffi-dev python-dev libxml2-dev libxmlsec1 xmlsec1 libxmlsec1-openssl libxmlsec1-dev`
+
+You'll want to find the equivalent on your OS of choice.
 
 ## Configuration
 
