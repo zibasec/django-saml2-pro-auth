@@ -39,6 +39,7 @@ if __name__ == "__main__":
         classifiers=[
             'Development Status :: 4 - Beta',
             'Intended Audience :: Developers',
+            'Framework :: Django :: 1.8',
             'Framework :: Django :: 1.10',
             'Framework :: Django :: 1.11',
             'Topic :: Security',
