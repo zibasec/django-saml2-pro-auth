@@ -1,3 +1,6 @@
+# CURRENTLY PRE-RELEASE. TESTS ARE STILL BEING BUILT.
+
+
 [![Coverage Status](https://coveralls.io/repos/github/MindPointGroup/django-saml2-pro-auth/badge.svg?branch=master)](https://coveralls.io/github/MindPointGroup/django-saml2-pro-auth?branch=master) [![CircleCI](https://circleci.com/gh/MindPointGroup/django-saml2-pro-auth.svg?style=svg)](https://circleci.com/gh/MindPointGroup/django-saml2-pro-auth)
 
 
