@@ -6,7 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: themattrix/tox 
+      - image: n42org/tox
 
     working_directory: ~/repo
 
