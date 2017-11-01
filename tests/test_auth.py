@@ -8,7 +8,7 @@ from django_saml2_pro_auth.utils import SAMLError
 
 class TestAuth(unittest.TestCase):
     try:
-        settings.configure()
+        settings.configure(CACHES={'default': {'django.core.cache.backends.locmem.LocMemCache'}})
     except RuntimeError:
         pass
 
