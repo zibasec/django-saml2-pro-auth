@@ -46,9 +46,12 @@ if __name__ == "__main__":
             'Topic :: System :: Systems Administration :: Authentication/Directory',
             'License :: OSI Approved :: MIT License',
             'Programming Language :: Python :: 2.7',
+            'Programming Language :: Python :: 3.4',
+            'Programming Language :: Python :: 3.5',
+            'Programming Language :: Python :: 3.6',
         ],
 
-        keywords='authentication saml saml2 django development',
+        keywords='sso single-signon authentication saml saml2 django development okta onelogin',
         packages=find_packages(where="src"),
         package_dir={
             '': 'src',

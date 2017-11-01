@@ -15,8 +15,8 @@ jobs:
       - run:
           name: Setup Apt deps 
           command: |
-            apt-get -qq update
-            apt-get -qq -y install build-essential libssl-dev libffi-dev python-dev libxmlsec1 xmlsec1 libxmlsec1-openssl libxmlsec1-dev
+            apt-get update
+            apt-get -y install build-essential libssl-dev libffi-dev python-dev libxml2-dev libxmlsec1 xmlsec1 libxmlsec1-openssl-dev libxmlsec1-dev
 
       - run:
           name: Tox run
