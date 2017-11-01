@@ -20,7 +20,7 @@ def get_provider_config(req):
         raise SAMLError("No provider specified in request")
 
     for index, provider_obj in enumerate(settings.SAML_PROVIDERS):
-        if provider_obj.keys()[0] == provider:
+        if list(provider_obj.keys())[0] == provider:
             base_cfg = settings.SAML_PROVIDERS[index][provider]
             break
 

@@ -1,4 +1,5 @@
 import unittest
+
 from django.test.utils import override_settings
 from django.conf import settings
 from django.test import RequestFactory
@@ -6,7 +7,10 @@ from django_saml2_pro_auth.auth import get_clean_map, get_provider_index
 from django_saml2_pro_auth.utils import SAMLError
 
 class TestAuth(unittest.TestCase):
-    settings.configure()
+    try:
+        settings.configure()
+    except RuntimeError:
+        pass
 
     @override_settings(SAML_PROVIDERS=[{'MyProvider': dict()},{'2ndProvider': dict()}])
     def test_get_provider_index1(self):

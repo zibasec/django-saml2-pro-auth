@@ -16,6 +16,8 @@ if IS_PY2:
 else:
     saml_package = 'python3-saml'
 
+print(saml_package)
+
 if __name__ == "__main__":
 
     setup(
@@ -43,7 +45,10 @@ if __name__ == "__main__":
         package_dir={
             '': 'src',
         },
-        install_requires=[saml_package],
+        install_requires=[
+            saml_package,
+            'six'
+        ],
         tests_require=[
             'django',
             'coverage',

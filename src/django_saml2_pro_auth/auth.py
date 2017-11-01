@@ -5,6 +5,8 @@ from django.http import (HttpResponse, HttpResponseRedirect,
 
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
 
+from six import iteritems
+
 from .utils import SAMLError, prepare_django_request
 
 
@@ -18,14 +20,14 @@ def get_provider_index(request):
         raise SAMLError("No provider specified in request")
 
     for index, provider_obj in enumerate(settings.SAML_PROVIDERS):
-        if provider_obj.keys()[0] == provider:
+        if list(provider_obj.keys())[0] == provider:
             return provider, index
 
     raise SAMLError("The provider: %s was not found in settings.py" % provider)
 
 def get_clean_map(user_map, saml_data):
     final_map = dict()
-    for usr_k, usr_v in user_map.iteritems():
+    for usr_k, usr_v in iteritems(user_map):
         if type(usr_v) is dict:
 
             if 'index' in usr_v:
