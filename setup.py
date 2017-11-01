@@ -3,7 +3,13 @@ from codecs import open
 from os import path
 from sys import version_info
 
-from django_saml2_pro_auth import release
+__version__ = '0.0.1'
+__title__ = 'django-saml2-pro-auth'
+__version_info__ = __version__ 
+__author__ = 'Jonathan Davila'
+__author_email__ = 'jonathan@davila.io'
+__license__ = 'MIT'
+__copyright__ = 'Copyright 2017 MindPoint Group'
 
 here = path.abspath(path.dirname(__file__))
 
@@ -22,14 +28,14 @@ print(saml_package)
 if __name__ == "__main__":
 
     setup(
-        name=release.__title__,
-        version=release.__version__,
+        name=__title__,
+        version=__version__,
         description="SAML2 authentication backend for Django wrapping OneLogin's python-saml package https://github.com/onelogin/python-saml",
         long_description=long_description,
         url='https://github.com/MindPointGroup/django-saml2-pro-auth',
-        author=release.__author__,
-        author_email=release.__author_email__,
-        license=release.__license__,
+        author=__author__,
+        author_email=__author_email__,
+        license=__license__,
         classifiers=[
             'Development Status :: 4 - Beta',
             'Intended Audience :: Developers',
