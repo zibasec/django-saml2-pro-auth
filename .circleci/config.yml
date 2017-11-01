@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  testpy2:
     docker:
       - image: nousdefions/tox:1.0
     working_directory: ~/repo
