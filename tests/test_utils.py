@@ -1,35 +1,23 @@
 from django.test.utils import override_settings
 from django.test import TestCase
-from django.conf import settings
 from django.test import RequestFactory
+from django.conf import settings
+
+import onelogin
 
 from django_saml2_pro_auth.utils import get_provider_config, init_saml_auth, prepare_django_request
 
-import onelogin
 from .data.configs import MOCK_SAML2_CONFIG
 from django_saml2_pro_auth.utils import SAMLError, SAMLSettingsError
 
+from . import init_test_settings
+
+test_settings = init_test_settings()
 try:
-    settings.configure()
-except:
+    settings.configure(**test_settings)
+except RuntimeError:
+    # already configured in other test
     pass
-
-CACHES = {
-    'default': {
-        'django.core.cache.backends.locmem.LocMemCache'
-    }
-}
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'testingdb'
-    }
-}
-settings.CACHES = CACHES
-settings.DATABASES = DATABASES
-
-
 
 class TestUtils(TestCase):
 

@@ -2,23 +2,18 @@ from django.test import TestCase
 from django.test.utils import override_settings
 from django.test import RequestFactory
 from django_saml2_pro_auth.utils import SAMLError
+from django.conf import settings
 
+from . import init_test_settings
+
+test_settings = init_test_settings()
 try:
-    settings.configure()
-except:
+    settings.configure(**test_settings)
+except RuntimeError:
+    # already configured in other test
     pass
 
-CACHES = {
-    'default': {
-        'django.core.cache.backends.locmem.LocMemCache'
-    }
-}
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'testingdb'
-
+from django_saml2_pro_auth.auth import get_clean_map, get_provider_index
 
 class TestAuth(TestCase):
 
