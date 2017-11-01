@@ -48,6 +48,15 @@ jobs:
           command: |
             tox -e py36-111
 
+workflows:
+  version: 2
+  test_pys:
+    - build
+    - test:
+        requires:
+          - build
+
+
 #      - run:
 #          name: run coveralls
 #          command: |
