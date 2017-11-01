@@ -9,6 +9,7 @@ jobs:
           name: 2.7 Tests 
           command: |
             tox -e py27-18,py27-110,py27-111
+
   testpy34:
     docker:
       - image: nousdefions/tox:1.0
@@ -30,7 +31,7 @@ jobs:
       - image: nousdefions/tox:1.0
     working_directory: ~/repo
     steps:
-
+      - checkout
       - run:
           name: 3.5 Tests 
           command: |
@@ -41,6 +42,7 @@ jobs:
       - image: nousdefions/tox:1.0
     working_directory: ~/repo
     steps:
+      - checkout
       - run:
           name: 3.6 Tests 
           command: |
