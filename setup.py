@@ -3,12 +3,13 @@ from codecs import open
 from os import path
 from sys import version_info
 
+from django_saml2_pro_auth import release
+
 here = path.abspath(path.dirname(__file__))
 
 with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-version = __import__('VERSION').__version__
 IS_PY2 = version_info[0] < 3
 
 if IS_PY2:
@@ -21,14 +22,14 @@ print(saml_package)
 if __name__ == "__main__":
 
     setup(
-        name='django-saml2-pro-auth',
-        version=version,
+        name=release.__title__,
+        version=release.__version__,
         description="SAML2 authentication backend for Django wrapping OneLogin's python-saml package https://github.com/onelogin/python-saml",
         long_description=long_description,
         url='https://github.com/MindPointGroup/django-saml2-pro-auth',
-        author='Jonathan I. Davila',
-        author_email='jonathan@davila.io',
-        license='MIT',
+        author=release.__author__,
+        author_email=release.__author_email__,
+        license=release.__license__,
         classifiers=[
             'Development Status :: 4 - Beta',
             'Intended Audience :: Developers',
