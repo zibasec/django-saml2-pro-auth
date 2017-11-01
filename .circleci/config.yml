@@ -2,28 +2,11 @@ version: 2
 jobs:
   build:
     docker:
-      - image: n42org/tox
-
-    working_directory: ~/repo
-
-    steps:
-      - checkout
-      - run:
-          name: Setup Apt deps 
-          command: |
-            apt-get update
-            apt-get -y install build-essential libssl-dev libffi-dev python-dev libxml2-dev libxmlsec1 xmlsec1 libxmlsec1-openssl pkg-config libxmlsec1-dev
-            pip install coverage coveralls
-
-
-
-  test:
-    docker:
-      - image: n42org/tox
-
+      - image: nousdefions/tox 
     working_directory: ~/repo
     parallelism: 4
     steps:
+      - checkout
       - run:
           name: 2.7 Tests 
           command: |
@@ -44,14 +27,6 @@ jobs:
           command: |
             tox -e py36-111
 
-workflows:
-  version: 2
-  test_pys:
-    jobs:
-      - build
-      - test:
-          requires:
-            - build
 
 
 #      - run:
