@@ -17,42 +17,48 @@ jobs:
           command: |
             apt-get update
             apt-get -y install build-essential libssl-dev libffi-dev python-dev libxml2-dev libxmlsec1 xmlsec1 libxmlsec1-openssl pkg-config libxmlsec1-dev
-
-      - run:
-          name: Tox run
-          command: |
-            tox
-
-      - run:
-          name: Setup Virtualenv
-          command: |
-            pip install virtualenv
-            virtualenv venv
-
-      - run:
-          name: Setup coverage and coveralls
-          command: |
-            . venv/bin/activate
             pip install coverage coveralls
 
+
+
+  test_py27:
+    docker:
+      - image: n42org/tox
+
+    working_directory: ~/repo
+    parallelism: 4
+    steps:
       - run:
-          name: run tests
+          name: 2.7 Tests 
           command: |
-            . venv/bin/activate
-            coverage run setup.py test
+            tox -e py27-18,py27-110,py27-111
 
       - run:
-          name: run coveralls
+          name: 3.4 Tests 
           command: |
-            . venv/bin/activate
-            coveralls
+            tox -e py34-18,py34-110,py34-111
 
       - run:
-          name: run report
+          name: 3.5 Tests 
           command: |
-            . venv/bin/activate
-            coverage html -d ./test-reports/ 
+            tox -e py35-18,py35-110,py35-111
 
-      - store_artifacts:
-          path: test-reports
-          destination: test-reports
+      - run:
+          name: 3.6 Tests 
+          command: |
+            tox -e py36-111
+
+#      - run:
+#          name: run coveralls
+#          command: |
+#            . venv/bin/activate
+#            coveralls
+#
+#      - run:
+#          name: run report
+#          command: |
+#            coverage html -d ./test-reports/ 
+#
+#      - store_artifacts:
+#          path: test-reports
+#          destination: test-reports
