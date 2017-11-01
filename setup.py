@@ -16,15 +16,6 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-IS_PY2 = version_info[0] < 3
-
-if IS_PY2:
-    saml_package = 'python-saml'
-else:
-    saml_package = 'python3-saml'
-
-print(saml_package)
-
 if __name__ == "__main__":
 
     setup(
@@ -57,7 +48,7 @@ if __name__ == "__main__":
             '': 'src',
         },
         install_requires=[
-            saml_package,
+            'python3-saml',
             'six'
         ],
         tests_require=[
