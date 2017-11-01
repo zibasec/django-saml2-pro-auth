@@ -9,12 +9,13 @@ from django.conf import settings
 settings.configure(CACHES={'default': {'django.core.cache.backends.locmem.LocMemCache'}})
 
 class TestAuth(unittest.TestCase):
-    try:
-        settings.configure(CACHES={'default': {'django.core.cache.backends.locmem.LocMemCache'}})
-    except RuntimeError:
-        pass
+    def setUp(self):
+        try:
+            settings.configure(CACHES={'default': {'django.core.cache.backends.locmem.LocMemCache'}})
+        except RuntimeError:
+            pass
 
-    from django_saml2_pro_auth.auth import get_clean_map, get_provider_index
+        from django_saml2_pro_auth.auth import get_clean_map, get_provider_index
 
 
     @override_settings(SAML_PROVIDERS=[{'MyProvider': dict()},{'2ndProvider': dict()}])
