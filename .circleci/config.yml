@@ -47,10 +47,11 @@ jobs:
 workflows:
   version: 2
   test_pys:
-    - build
-    - test:
-        requires:
-          - build
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
 
 
 #      - run:
