@@ -9,6 +9,27 @@ import onelogin
 from .data.configs import MOCK_SAML2_CONFIG
 from django_saml2_pro_auth.utils import SAMLError, SAMLSettingsError
 
+try:
+    settings.configure()
+except:
+    pass
+
+CACHES = {
+    'default': {
+        'django.core.cache.backends.locmem.LocMemCache'
+    }
+}
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'testingdb'
+    }
+}
+settings.CACHES = CACHES
+settings.DATABASES = DATABASES
+
+
 
 class TestUtils(TestCase):
 

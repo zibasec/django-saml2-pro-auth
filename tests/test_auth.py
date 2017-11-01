@@ -3,7 +3,11 @@ from django.test.utils import override_settings
 from django.test import RequestFactory
 from django_saml2_pro_auth.utils import SAMLError
 
-settings.configure()
+try:
+    settings.configure()
+except:
+    pass
+
 CACHES = {
     'default': {
         'django.core.cache.backends.locmem.LocMemCache'
