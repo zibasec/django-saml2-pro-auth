@@ -1,19 +1,26 @@
-import unittest
-
+from django.test import TestCase
 from django.test.utils import override_settings
 from django.test import RequestFactory
-from django_saml2_pro_auth.auth import get_clean_map, get_provider_index
 from django_saml2_pro_auth.utils import SAMLError
 
-from django.conf import settings
+try:
+    settings.configure()
+except:
+    pass
 
-settings.configure(CACHES={'default': {'django.core.cache.backends.locmem.LocMemCache'}})
+CACHES = {
+    'default': {
+        'django.core.cache.backends.locmem.LocMemCache'
+    }
+}
 
-class TestAuth(unittest.TestCase):
-    try:
-        settings.configure(CACHES={'default': {'django.core.cache.backends.locmem.LocMemCache'}})
-    except RuntimeError:
-        pass
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'testingdb'
+
+
+class TestAuth(TestCase):
 
     @override_settings(SAML_PROVIDERS=[{'MyProvider': dict()},{'2ndProvider': dict()}])
     def test_get_provider_index1(self):
