@@ -12,9 +12,9 @@ class TestAuth(unittest.TestCase):
     try:
         settings.configure(CACHES={'default': {'django.core.cache.backends.locmem.LocMemCache'}})
     except RuntimeError:
-        continue
-    finally:
-        from django_saml2_pro_auth.auth import get_clean_map, get_provider_index
+        pass
+
+    from django_saml2_pro_auth.auth import get_clean_map, get_provider_index
 
 
     @override_settings(SAML_PROVIDERS=[{'MyProvider': dict()},{'2ndProvider': dict()}])
