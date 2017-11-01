@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: nousdefions/tox 
+      - image: nousdefions/tox:1.0
     working_directory: ~/repo
     parallelism: 4
     steps:
