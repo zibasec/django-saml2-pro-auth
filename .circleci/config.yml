@@ -6,33 +6,46 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:2
+      - image: themattrix/tox 
 
     working_directory: ~/repo
 
     steps:
       - checkout
       - run:
+          name: Setup xmlsec
           command: |
             sudo apt-get install libxmlsec1 xmlsec1 libxmlsec1-openssl libxmlsec1-dev
+
       - run:
+          name: Tox run
+          command: |
+            tox -e ALL 
+
+      - run:
+          name: Setup Virtualenv
           command: |
             pip install virtualenv
             virtualenv venv
+
       - run:
+          name: Setup coverage and coveralls
           command: |
             . venv/bin/activate
             pip install coverage coveralls
+
       - run:
           name: run tests
           command: |
             . venv/bin/activate
             coverage run setup.py test
+
       - run:
           name: run coveralls
           command: |
             . venv/bin/activate
             coveralls
+
       - run:
           name: run report
           command: |
