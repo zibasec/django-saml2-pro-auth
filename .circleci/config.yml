@@ -12,10 +12,10 @@ jobs:
 
     steps:
       - checkout
-      - run:
-          name: Setup xmlsec
-          command: |
-            sudo apt-get install libxmlsec1 xmlsec1 libxmlsec1-openssl libxmlsec1-dev
+#      - run:
+#          name: Setup xmlsec
+#          command: |
+#            sudo apt-get install libxmlsec1 xmlsec1 libxmlsec1-openssl libxmlsec1-dev
 
       - run:
           name: Tox run
