@@ -18,11 +18,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: 2.7 Tests 
-          command: |
-            tox -e py27-18,py27-110,py27-111
-
-      - run:
           name: 3.4 Tests 
           command: |
             tox -e py34-18,py34-110,py34-111
