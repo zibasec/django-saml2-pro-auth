@@ -78,8 +78,15 @@ SAML_PROVIDERS = [{
                 "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
             },
             "NameIDFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
-            "x509cert": open(os.path.join(BASE_DIR,'certs/sp.crt'), 'r').read(),
-            "privateKey": open(os.path.join(BASE_DIR,'certs/sp.key'), 'r').read(),
+            ## For the cert/key you can place their content in
+            ## the x509cert and privateKey params
+            ## as single-line strings or place them in 
+            ## certs/sp.key and certs/sp.crt or you can supply a 
+            ## path via custom_base_path which should contain
+            ## sp.crt and sp.key
+            "x509cert": "",
+            "privateKey": "",
+            custom_base_path: "",
         },
         "idp": {
             "entityId": "https://kdkdfjdfsklj.my.MyProvider.com/0f3172cf-5aa6-40f4-8023-baf9d0996cec",
@@ -221,4 +228,4 @@ The following are things that arent present yet but would be cool to have
 * ADFS IdP support
 * Integration test with full on mock saml interactions to test the actual backend auth
 * Tests add coverage to views and the authenticate() get_user() methods in the auth backend
-
+* models (with multi-tentant support) for idp and sp in order to facilitate management via django admin
