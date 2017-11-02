@@ -53,11 +53,6 @@ if __name__ == "__main__":
         ],
         tests_require=[
             'django',
-            'coverage',
-            'pylint',
-            'pep8',
-            'pyflakes',
-            'coveralls'
         ],
         extras_require={
             'dev': ['check-manifest'],
