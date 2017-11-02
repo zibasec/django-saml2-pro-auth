@@ -1,10 +1,9 @@
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/MindPointGroup/django-saml2-pro-auth/master/LICENSE)
-
+[![Pypi version](https://img.shields.io/pypi/v/django-saml2-pro-auth.svg)](https://pypi.org/project/django-saml2-pro-auth/) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/MindPointGroup/django-saml2-pro-auth/master/LICENSE)
 
 [![Coverage Status](https://coveralls.io/repos/github/MindPointGroup/django-saml2-pro-auth/badge.svg?branch=master)](https://coveralls.io/github/MindPointGroup/django-saml2-pro-auth?branch=master) [![CircleCI](https://circleci.com/gh/MindPointGroup/django-saml2-pro-auth.svg?style=svg)](https://circleci.com/gh/MindPointGroup/django-saml2-pro-auth)
 
 
-[![Python Versions](https://img.shields.io/badge/Python-2.7%203.4%203.5%203.6-blue.svg)](https://pypi.org/project/django-saml2-pro-auth/) [![Django Versions](https://img.shields.io/badge/Django-1.8%201.10%201.11-blue.svg)](https://pypi.org/project/django-saml2-pro-auth/)
+![Python versions](https://img.shields.io/pypi/pyversions/django-saml2-pro-auth.svg) [![Django Versions](https://img.shields.io/badge/Django%20Version-1.8%2C%201.10%2C%201.11-44B78B.svg)](https://pypi.org/project/django-saml2-pro-auth/)
 
 
 # django-saml2-pro-auth
