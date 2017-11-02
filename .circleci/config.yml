@@ -1,112 +1,51 @@
 version: 2
 jobs:
-  testpy27-18:
+  testpy2:
     docker:
       - image: nousdefions/tox:1.0
     working_directory: ~/repo
     steps:
       - checkout
       - run:
-          name: 2.7 Tests with Django 1.8 
+          name: 2.7 Tests 
           command: |
-            tox -e py27-18
+            tox -e py27-18,py27-110,py27-111
 
-  testpy27-110:
+  testpy34:
     docker:
       - image: nousdefions/tox:1.0
     working_directory: ~/repo
     steps:
       - checkout
       - run:
-          name: 2.7 Tests with Django 1.10 
+          name: 2.7 Tests 
           command: |
-            tox -e py27-110
+            tox -e py27-18,py27-110,py27-111
 
-  testpy27-111:
-    docker:
-      - image: nousdefions/tox:1.0
-    working_directory: ~/repo
-    steps:
-      - checkout
       - run:
-          name: 2.7 Tests with Django 1.11 
+          name: 3.4 Tests 
           command: |
-            tox -e py27-111
+            tox -e py34-18,py34-110,py34-111
 
-  testpy34-18:
+  testpy35:
     docker:
       - image: nousdefions/tox:1.0
     working_directory: ~/repo
     steps:
       - checkout
       - run:
-          name: 3.4 Tests with Django 1.8 
+          name: 3.5 Tests 
           command: |
-            tox -e py34-18
+            tox -e py35-18,py35-110,py35-111
 
-  testpy34-110:
+  testpy36:
     docker:
       - image: nousdefions/tox:1.0
     working_directory: ~/repo
     steps:
       - checkout
       - run:
-          name: 3.4 Tests with Django 1.10 
-          command: |
-            tox -e py34-110
-
-  testpy34-111:
-    docker:
-      - image: nousdefions/tox:1.0
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run:
-          name: 3.4 Tests with Django 1.11 
-          command: |
-            tox -e py34-111
-
-  testpy35-18:
-    docker:
-      - image: nousdefions/tox:1.0
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run:
-          name: 3.5 Tests with Django 1.8 
-          command: |
-            tox -e py35-18
-
-  testpy35-110:
-    docker:
-      - image: nousdefions/tox:1.0
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run:
-          name: 3.5 Tests with Djagno 1.10 
-          command: |
-            tox -e py35-110
-
-  testpy35-111:
-    docker:
-      - image: nousdefions/tox:1.0
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run:
-          name: 3.5 Tests with Django 1.11 
-          command: |
-            tox -e py35-111
-
-  testpy36-111:
-    docker:
-      - image: nousdefions/tox:1.0
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run:
-          name: 3.6 Tests with Djagno 1.11 
+          name: 3.6 Tests 
           command: |
             tox -e py36-111
 
@@ -114,16 +53,10 @@ workflows:
   version: 2
   test_pys:
     jobs:
-      - testpy27-18
-      - testpy27-110
-      - testpy27-111
-      - testpy34-18
-      - testpy34-110
-      - testpy34-111
-      - testpy35-18
-      - testpy35-110
-      - testpy35-111
-      - testpy36-111
+      - testpy2
+      - testpy34
+      - testpy35
+      - testpy36
 
 
 #      - run:
