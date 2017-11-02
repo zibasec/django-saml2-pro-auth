@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/MindPointGroup/django-saml2-pro-auth/badge.svg?branch=master)](https://coveralls.io/github/MindPointGroup/django-saml2-pro-auth?branch=master) [![CircleCI](https://circleci.com/gh/MindPointGroup/django-saml2-pro-auth.svg?style=svg)](https://circleci.com/gh/MindPointGroup/django-saml2-pro-auth)
 
 
-![Python versions](https://img.shields.io/pypi/pyversions/django-saml2-pro-auth.svg) [![Django Versions](https://img.shields.io/badge/Django%20Version-1.8%2C%201.10%2C%201.11-44B78B.svg)](https://pypi.org/project/django-saml2-pro-auth/)
+![Python versions](https://img.shields.io/pypi/pyversions/django-saml2-pro-auth.svg) [![Django versions](https://img.shields.io/badge/django-1.8%2C%201.10%2C%201.11-44B78B.svg)](https://pypi.org/project/django-saml2-pro-auth/)
 
 
 # django-saml2-pro-auth
