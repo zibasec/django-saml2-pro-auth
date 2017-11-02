@@ -66,6 +66,7 @@ SAML_PROVIDERS = [{
     "MyProvider": {
         "strict": True,
         "debug": False,
+        "custom_base_path": "",
         "sp": {
             "entityId": "https://test.davila.io/sso/saml/metadata",
             "assertionConsumerService": {
@@ -85,7 +86,6 @@ SAML_PROVIDERS = [{
             ## sp.crt and sp.key
             "x509cert": "",
             "privateKey": "",
-            custom_base_path: "",
         },
         "idp": {
             "entityId": "https://kdkdfjdfsklj.my.MyProvider.com/0f3172cf-5aa6-40f4-8023-baf9d0996cec",
