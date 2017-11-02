@@ -1,7 +1,11 @@
 from django.test import TestCase
 from django.conf import settings
-from django.urls import resolve, reverse
 from django.test.utils import override_settings
+
+try:
+    from django.urls import resolve, reverse
+except ImportError:
+    from django.core.urlresolvers import resolve, reverse
 
 import onelogin
 
