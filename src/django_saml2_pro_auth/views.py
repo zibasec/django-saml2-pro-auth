@@ -49,7 +49,7 @@ def saml_login(request):
             raise SAMLError('ERRORS FOUND IN SAML REQUEST: %s' % errors)
     elif 'provider' in req['get_data']:
         if hasattr(settings, 'SAML_REDIRECT'):
-            return HttpResponseRedirect(auth.login(settings.SAML_REDIRECT))
+            return HttpResponseRedirect(auth.login(return_to=settings.SAML_REDIRECT))
         elif 'RelayState' in req['post_data']:
                 return HttpResponseRedirect(auth.redirect_to(req['post_data']['RelayState']))
         else:
