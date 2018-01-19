@@ -22,6 +22,7 @@ def saml_login(request):
     auth = init_saml_auth(req)
 
     if 'acs' in req['get_data']:
+        # IDP initiated
         request_id = None
 
         if 'AuthNRequestID' in request.session:
@@ -41,20 +42,23 @@ def saml_login(request):
             attributes = request.session['samlUserdata'].items()
             user = authenticate(request=request)
             login(request, user)
-            if 'RelayState' in req['post_data'] and OneLogin_Saml2_Utils.get_self_url(req) != req['post_data']['RelayState']:
+            if hasattr(settings, 'SAML_REDIRECT'):
+                return HttpResponseRedirect(settings.SAML_REDIRECT)
+            elif 'RelayState' in req['post_data'] and OneLogin_Saml2_Utils.get_self_url(req) != req['post_data']['RelayState']:
                 return HttpResponseRedirect(auth.redirect_to(req['post_data']['RelayState']))
             else:
                 return HttpResponseRedirect(OneLogin_Saml2_Utils.get_self_url(req))
         else:
             raise SAMLError('ERRORS FOUND IN SAML REQUEST: %s' % errors)
     elif 'provider' in req['get_data']:
+        # SP Initiated
         if hasattr(settings, 'SAML_REDIRECT'):
             return HttpResponseRedirect(auth.login(return_to=settings.SAML_REDIRECT))
         elif 'RelayState' in req['post_data']:
                 return HttpResponseRedirect(auth.redirect_to(req['post_data']['RelayState']))
         else:
             redir = OneLogin_Saml2_Utils.get_self_url(req)
-            return HttpResponseRedirect(auth.login(redir))
+            return HttpResponseRedirect(auth.login(return_to=redir))
     else:
         return HttpResponseRedirect(auth.login())
 
