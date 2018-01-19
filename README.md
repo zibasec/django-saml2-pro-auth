@@ -208,7 +208,7 @@ SAML_USERS_MAP = [{
 
 | **Route**                                 | **Uses**                                                                                                                                                                                                              |
 |-------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `/sso/saml/?acs&provider=MyProvider`     | The Assertion Consumer Service Endpoint. This is where your IdP will be POSTing assertions. The 'provider' query string must have a value that matches a top level key of your SAML_PROVIDERS settings.               |
+| `/sso/saml/?acs&amp;provider=MyProvider`     | The Assertion Consumer Service Endpoint. This is where your IdP will be POSTing assertions. The 'provider' query string must have a value that matches a top level key of your SAML_PROVIDERS settings.               |
 | `/sso/saml/metadata?provider=MyProvider` | This is where the SP (ie your Django App) has metadata. Some IdPs request this to generate configuration. The 'provider' query string must have a value that matches a top level key of your SAML_PROVIDERS settings. |
 | `/sso/saml/?provider=MyProvider`         | Use this endpoint when you want to trigger an SP-initiated login. For example, this could be the `href`of a "Login with ClientX Okta" button.                                                                         |
 
