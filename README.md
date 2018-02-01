@@ -195,7 +195,7 @@ And of course, you can use the dict structure even when there IdP supplied attri
 SAML_USERS_MAP = [{
     "myIdp" : {
       "email": {"key": "Email"},
-      "name": {"key": "Username
+      "name": {"key": "Username"}
     }
 ```
 
