@@ -117,18 +117,18 @@ SAML_PROVIDERS = [{
             }
         },
         "security": {
-            "name_id_encrypted": False,
-            "authn_requests_signed": True,
-            "logout_requests_signed": False,
-            "logout_response_signed": False,
-            "sign_metadata": False,
-            "want_messages_signed": False,
-            "want_assertions_signed": True,
-            "want_name_id": True,
-            "want_name_id_encrypted": False,
-            "want_assertions_encrypted": True,
-            "signature_algorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1",
-            "digest_algorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1",
+            "nameIdEncrypted": False,
+            "authnRequestsSigned": True,
+            "logoutRequestSigned": False,
+            "logoutResponseSigned": False,
+            "signMetadata": False,
+            "wantMessagesSigned": False,
+            "wantAssertionsSigned": True,
+            "wantNameId": True,
+            "wantNameIdEncrypted": False,
+            "wantAssertionsEncrypted": True,
+            "signatureAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1",
+            "digestAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1",
         }
 
     }
