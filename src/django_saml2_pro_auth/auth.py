@@ -61,7 +61,7 @@ class Backend(object): # pragma: no cover
             lookup_attribute: final_map[lookup_attribute]
         }
 
-        user, _ = User.objects.update_or_create(**lookup_map, defaults=final_map)
+        user, _ = User.objects.update_or_create(defaults=final_map, **lookup_map)
         return user
 
     def get_user(self, user_id):
