@@ -54,7 +54,7 @@ class Backend(object): # pragma: no cover
 
 
 
-        user, _ = User.objects.get_or_create(**final_map)
+        user, _ = User.objects.update_or_create(**final_map)
         return user
 
     def get_user(self, user_id):
