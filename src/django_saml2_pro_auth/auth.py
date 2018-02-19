@@ -52,7 +52,11 @@ class Backend(object): # pragma: no cover
 
         final_map = get_clean_map(user_map, request.session['samlUserdata'])
 
-        lookup_attribute = settings.SAML_USERS_LOOKUP_ATTRIBUTE
+        try:
+            lookup_attribute = settings.SAML_USERS_LOOKUP_ATTRIBUTE
+        except AttributeError:
+            lookup_attribute = "username"
+
         lookup_map = {
             lookup_attribute: final_map[lookup_attribute]
         }
