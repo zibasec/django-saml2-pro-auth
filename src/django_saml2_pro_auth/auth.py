@@ -50,11 +50,20 @@ class Backend(object): # pragma: no cover
         provider, provider_index = get_provider_index(request)
         user_map = settings.SAML_USERS_MAP[provider_index][provider]
 
-        final_map = get_clean_map(user_map, request.session['samlUserdata']) 
+        final_map = get_clean_map(user_map, request.session['samlUserdata'])
 
+        lookup_attribute = getattr(settings, "SAML_USERS_LOOKUP_ATTRIBUTE", "username")
+        sync_attributes = getattr(settings, "SAML_USERS_SYNC_ATTRIBUTES", False)
 
+        lookup_map = {
+            lookup_attribute: final_map[lookup_attribute]
+        }
 
-        user, _ = User.objects.get_or_create(**final_map)
+        if sync_attributes:
+            user, _ = User.objects.update_or_create(defaults=final_map, **lookup_map)
+        else:
+            user, _ = User.objects.get_or_create(defaults=final_map, **lookup_map)
+
         return user
 
     def get_user(self, user_id):

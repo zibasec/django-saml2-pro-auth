@@ -80,8 +80,8 @@ SAML_PROVIDERS = [{
             "NameIDFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
             ## For the cert/key you can place their content in
             ## the x509cert and privateKey params
-            ## as single-line strings or place them in 
-            ## certs/sp.key and certs/sp.crt or you can supply a 
+            ## as single-line strings or place them in
+            ## certs/sp.key and certs/sp.crt or you can supply a
             ## path via custom_base_path which should contain
             ## sp.crt and sp.key
             "x509cert": "",
@@ -199,7 +199,27 @@ SAML_USERS_MAP = [{
     }
 ```
 
+**SAML_USERS_LOOKUP_ATTRIBUTE (optional):**
+Specifies the User model field to be used for object lookup in the database.
+Has to be one of the dict keys for the Django's User model specified in "SAML_USERS_MAP".
 
+The attribute in the Django User model should have the "unique" flag set.
+(In the default User model in django only username has a unique contstraint in the DB, the same email could be used by multiple users)
+
+Defaults to "username"
+
+```python
+SAML_USERS_LOOKUP_ATTRIBUTE = "email"
+```
+
+**SAML_USERS_SYNC_ATTRIBUTES (optional):**
+Specifies if the user attributes have to be updated at each login with those received from the IdP.
+
+Defaults to False
+
+```python
+SAML_USERS_SYNC_ATTRIBUTES = True
+```
 
 **SAML_PROVIDERS:** This is exactly the same spec as OneLogin's [python-saml and python3-saml packages](https://github.com/onelogin/python3-saml#settings). The big difference is here you supply a list of dicts where the top most key(s) must map 1:1 to the top most keys in `SAML_USERS_MAP`. Also, this package allows you to ref the cert/key files via `open()` calls. This is to allow those of you with multiple external customers to login to your platform with any N number of IdPs.
 
@@ -221,7 +241,7 @@ The following are things that you may run into issue with. Here are some tips.
 
 # Wishlist and TODOs
 
-The following are things that arent present yet but would be cool to have 
+The following are things that arent present yet but would be cool to have
 
 * Implement logic for Single Logout Service
 * ADFS IdP support
