@@ -5,7 +5,7 @@ from django.conf import settings
 
 from . import views
 
-SAML_ROUTE = settings.SAML_ROUTE
+SAML_ROUTE = getattr(settings, 'SAML_ROUTE', 'sso/saml')
 
 if SAML_ROUTE.strip()[-1] == '/':
     SAML_ROUTE = SAML_ROUTE.rstrip('/')
