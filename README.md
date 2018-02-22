@@ -248,3 +248,4 @@ The following are things that arent present yet but would be cool to have
 * Integration test with full on mock saml interactions to test the actual backend auth
 * Tests add coverage to views and the authenticate() get_user() methods in the auth backend
 * models (with multi-tentant support) for idp and sp in order to facilitate management via django admin
+* Tests/Support for Django 2
