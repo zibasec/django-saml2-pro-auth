@@ -52,16 +52,18 @@ class Backend(object): # pragma: no cover
 
         final_map = get_clean_map(user_map, request.session['samlUserdata'])
 
-        try:
-            lookup_attribute = settings.SAML_USERS_LOOKUP_ATTRIBUTE
-        except AttributeError:
-            lookup_attribute = "username"
+        lookup_attribute = getattr(settings, "SAML_USERS_LOOKUP_ATTRIBUTE", "username")
+        sync_attributes = getattr(settings, "SAML_USERS_SYNC_ATTRIBUTES", False)
 
         lookup_map = {
             lookup_attribute: final_map[lookup_attribute]
         }
 
-        user, _ = User.objects.update_or_create(defaults=final_map, **lookup_map)
+        if sync_attributes:
+            user, _ = User.objects.update_or_create(defaults=final_map, **lookup_map)
+        else:
+            user, _ = User.objects.get_or_create(defaults=final_map, **lookup_map)
+
         return user
 
     def get_user(self, user_id):
