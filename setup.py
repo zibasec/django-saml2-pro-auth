@@ -3,7 +3,7 @@ from codecs import open
 from os import path
 from sys import version_info
 
-__version__ = '0.0.4'
+__version__ = '0.0.5'
 __title__ = 'django-saml2-pro-auth'
 __version_info__ = __version__ 
 __author__ = 'Jonathan Davila'
