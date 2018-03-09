@@ -17,7 +17,8 @@ def get_provider_config(req):
     try:
         provider = req['get_data']['provider']
     except KeyError:
-        raise SAMLError("No provider specified in request")
+        provider = list(settings.SAML_PROVIDERS[0].keys())[0]
+        req['get_data']['provider'] = provider
 
     for index, provider_obj in enumerate(settings.SAML_PROVIDERS):
         if list(provider_obj.keys())[0] == provider:

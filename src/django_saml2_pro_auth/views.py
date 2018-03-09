@@ -2,7 +2,7 @@ from django.conf import settings
 from django.http import (HttpResponse, HttpResponseRedirect,
                          HttpResponseServerError)
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, REDIRECT_FIELD_NAME
 
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
 from onelogin.saml2.settings import OneLogin_Saml2_Settings
@@ -54,6 +54,8 @@ def saml_login(request):
         # SP Initiated
         if hasattr(settings, 'SAML_REDIRECT'):
             return HttpResponseRedirect(auth.login(return_to=settings.SAML_REDIRECT))
+        elif REDIRECT_FIELD_NAME in req['get_data']:
+            return HttpResponseRedirect(auth.login(return_to=req['get_data'][REDIRECT_FIELD_NAME]))
         elif 'RelayState' in req['post_data']:
                 return HttpResponseRedirect(auth.redirect_to(req['post_data']['RelayState']))
         else:
