@@ -29,11 +29,13 @@ class TestUtils(TestCase):
         auth_obj = init_saml_auth(req)
         self.assertTrue(type(auth_obj) is onelogin.saml2.auth.OneLogin_Saml2_Auth)
 
+    @override_settings(SAML_PROVIDERS=[{'MyProvider': {'name': 'MyProvider'}}])
     def test_get_provider_config_with_missing_query_str(self):
         r = RequestFactory()
         request = r.get('/sso/saml/', **dict(HTTP_HOST='example.com'))
         req = prepare_django_request(request)
-        self.assertRaises(SAMLSettingsError, get_provider_config, req)
+        config = get_provider_config(req)
+        self.assertEqual(config['name'], 'MyProvider')
 
     @override_settings(SAML_PROVIDERS=MOCK_SAML2_CONFIG)
     def test_get_provider_config_with_missing_provider(self):

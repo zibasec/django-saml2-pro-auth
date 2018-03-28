@@ -33,10 +33,12 @@ class TestAuth(TestCase):
         self.assertEqual(provider2, '2ndProvider')
         self.assertEqual(index2, 1)
 
+    @override_settings(SAML_PROVIDERS=[{'MyProvider': {'name': 'MyProvider'}}])
     def test_get_provider_index_missing_query_str(self):
         r2_factory = RequestFactory()
         request2 = r2_factory.get('/sso/saml/')
-        self.assertRaises(SAMLError, get_provider_index, request2)
+        config, index = get_provider_index(request2)
+        self.assertEqual(config['name'], 'MyProvider')
 
     @override_settings(SAML_PROVIDERS=[{'MyProvider': dict()},{'2ndProvider': dict()}])
     def test_get_provider_index_not_in_settings(self):
