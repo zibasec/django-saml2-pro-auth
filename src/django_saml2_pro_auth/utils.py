@@ -45,6 +45,7 @@ def init_saml_auth(req):
     auth = OneLogin_Saml2_Auth(req, provider_settings)
     return auth
 
+
 def prepare_django_request(request):
     http_host = request.META.get('HTTP_HOST', None)
 
