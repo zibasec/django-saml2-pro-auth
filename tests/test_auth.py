@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.test.utils import override_settings
 from django.test import RequestFactory
-from django_saml2_pro_auth.utils import SAMLError
+from django_saml2_pro_auth.utils import SAMLError, SAMLSettingsError
 from django.conf import settings
 
 from . import init_test_settings
@@ -36,7 +36,7 @@ class TestAuth(TestCase):
     def test_get_provider_index_missing_query_str(self):
         r2_factory = RequestFactory()
         request2 = r2_factory.get('/sso/saml/')
-        self.assertRaises(SAMLError, get_provider_index, request2)
+        self.assertRaises(SAMLSettingsError, get_provider_index, request2)
 
     @override_settings(SAML_PROVIDERS=[{'MyProvider': dict()},{'2ndProvider': dict()}])
     def test_get_provider_index_not_in_settings(self):

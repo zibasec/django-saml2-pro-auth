@@ -15,12 +15,16 @@ def get_provider_config(req):
     final_cfg = {}
     base_cfg = None
     try:
+        providers = settings.SAML_PROVIDERS
+    except AttributeError:
+        raise SAMLSettingsError('SAML_PROVIDERS is not defined in settings')
+    try:
         provider = req['get_data']['provider']
     except KeyError:
-        provider = list(settings.SAML_PROVIDERS[0].keys())[0]
+        provider = list(providers[0].keys())[0]
         req['get_data']['provider'] = provider
 
-    for index, provider_obj in enumerate(settings.SAML_PROVIDERS):
+    for index, provider_obj in enumerate(providers):
         if list(provider_obj.keys())[0] == provider:
             base_cfg = settings.SAML_PROVIDERS[index][provider]
             break
