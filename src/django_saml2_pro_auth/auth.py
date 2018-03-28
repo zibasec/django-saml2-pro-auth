@@ -23,7 +23,6 @@ def get_provider_index(request):
     except KeyError:
         provider = list(providers[0].keys())[0]
         req['get_data']['provider'] = provider
-        raise SAMLError("No provider specified in request")
 
     for index, provider_obj in enumerate(providers):
         if list(provider_obj.keys())[0] == provider:

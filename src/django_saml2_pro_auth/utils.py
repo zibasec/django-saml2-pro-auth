@@ -33,9 +33,12 @@ def get_provider_config(req):
         raise SAMLSettingsError("Provider %s was not found in settings" % provider)
 
     final_cfg = base_cfg
-    final_cfg['sp']['x509cert'] = OneLogin_Saml2_Utils.format_cert(final_cfg['sp']['x509cert'])
-    final_cfg['sp']['privateKey'] = OneLogin_Saml2_Utils.format_private_key(final_cfg['sp']['privateKey'])
-    final_cfg['idp']['x509cert'] = OneLogin_Saml2_Utils.format_cert(final_cfg['idp']['x509cert'])
+    try:
+        final_cfg['sp']['x509cert'] = OneLogin_Saml2_Utils.format_cert(final_cfg['sp']['x509cert'])
+        final_cfg['sp']['privateKey'] = OneLogin_Saml2_Utils.format_private_key(final_cfg['sp']['privateKey'])
+        final_cfg['idp']['x509cert'] = OneLogin_Saml2_Utils.format_cert(final_cfg['idp']['x509cert'])
+    except KeyError:
+        pass
 
     return final_cfg
 
