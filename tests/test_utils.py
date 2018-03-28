@@ -33,7 +33,7 @@ class TestUtils(TestCase):
         r = RequestFactory()
         request = r.get('/sso/saml/', **dict(HTTP_HOST='example.com'))
         req = prepare_django_request(request)
-        self.assertRaises(SAMLError, get_provider_config, req)
+        self.assertRaises(SAMLSettingsError, get_provider_config, req)
 
     @override_settings(SAML_PROVIDERS=MOCK_SAML2_CONFIG)
     def test_get_provider_config_with_missing_provider(self):
