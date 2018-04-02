@@ -7,7 +7,7 @@ from onelogin.saml2.auth import OneLogin_Saml2_Auth
 
 from six import iteritems
 
-from .utils import SAMLError, prepare_django_request
+from .utils import SAMLError, SAMLSettingsError, prepare_django_request
 
 
 def get_provider_index(request):
@@ -15,11 +15,16 @@ def get_provider_index(request):
     the proper user map"""
     req = prepare_django_request(request)
     try:
+        providers = settings.SAML_PROVIDERS
+    except AttributeError:
+        raise SAMLSettingsError('SAML_PROVIDERS is not defined in settings')
+    try:
         provider = req['get_data']['provider']
     except KeyError:
-        raise SAMLError("No provider specified in request")
+        provider = list(providers[0].keys())[0]
+        req['get_data']['provider'] = provider
 
-    for index, provider_obj in enumerate(settings.SAML_PROVIDERS):
+    for index, provider_obj in enumerate(providers):
         if list(provider_obj.keys())[0] == provider:
             return provider, index
 
