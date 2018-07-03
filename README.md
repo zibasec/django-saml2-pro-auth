@@ -221,6 +221,18 @@ Defaults to False
 SAML_USERS_SYNC_ATTRIBUTES = True
 ```
 
+
+**SAML_USERS_STRICT_MAPPING (optional):**
+Specifies if every user attribute defined in SAML_USER_MAP must be present
+in the saml response or not. If set to False, make sure the user model have
+ the atributes that may not be present in the response with null=True or a default value.
+
+Defaults to True
+
+```python
+SAML_USERS_STRICT_MAPPING = False
+```
+
 **SAML_PROVIDERS:** This is exactly the same spec as OneLogin's [python-saml and python3-saml packages](https://github.com/onelogin/python3-saml#settings). The big difference is here you supply a list of dicts where the top most key(s) must map 1:1 to the top most keys in `SAML_USERS_MAP`. Also, this package allows you to ref the cert/key files via `open()` calls. This is to allow those of you with multiple external customers to login to your platform with any N number of IdPs.
 
 
