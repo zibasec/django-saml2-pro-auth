@@ -108,3 +108,78 @@ class TestAuth(TestCase):
         self.assertEqual(merged_map['email'], 'montypython@example.com')
         self.assertEqual(merged_map['name'], 'montypython')
         self.assertEqual(merged_map['customer'], 'examplecorp')
+
+    @override_settings(SAML_USERS_STRICT_MAPPING=False)
+    def test_non_strict_mapping_users_with_index_values(self):
+        user_map = {
+            'email': {
+                'index': 0,
+                'key': 'Email'
+            },
+            'name': {
+                'index': 0,
+                'key': 'Username'
+            },
+            'age': {
+                'index': 0,
+                'key': 'Age'
+            }
+        }
+
+        saml_map = {
+            'Username': ['montypython'],
+            'lastName': ['Cleese'],
+            'Email': ['montypython@example.com'],
+            'firstName': ['John']
+        }
+
+        merged_map = get_clean_map(user_map, saml_map)
+        self.assertEqual(merged_map['email'], 'montypython@example.com')
+        self.assertEqual(merged_map['name'], 'montypython')
+        self.assertIsNone(merged_map['age'])
+
+    @override_settings(SAML_USERS_STRICT_MAPPING=False)
+    def test_non_strict_mapping_users_without_index_values(self):
+        user_map = {
+            'email': 'Email',
+            'name': 'Username',
+            'age': 'Age',
+        }
+
+        saml_map = {
+            'Username': 'montypython',
+            'lastName': 'Cleese',
+            'Email': 'montypython@example.com',
+            'firstName': 'John'
+        }
+
+        merged_map = get_clean_map(user_map, saml_map)
+        self.assertEqual(merged_map['email'], 'montypython@example.com')
+        self.assertEqual(merged_map['name'], 'montypython')
+        self.assertIsNone(merged_map['age'])
+
+    @override_settings(SAML_USERS_STRICT_MAPPING=False)
+    def test_non_strict_mapping_users_with_mixed_value_styles(self):
+        user_map = {
+            'email': 'Email',
+            'name': {
+                'index': 1,
+                'key': 'Username'
+            },
+            'customer': {'key': 'Client'},
+            'age': 'Age',
+        }
+
+        saml_map = {
+            'Username': ['','montypython'],
+            'lastName': 'Cleese',
+            'Email': 'montypython@example.com',
+            'firstName': 'John',
+            'Client': 'examplecorp'
+        }
+
+        merged_map = get_clean_map(user_map, saml_map)
+        self.assertEqual(merged_map['email'], 'montypython@example.com')
+        self.assertEqual(merged_map['name'], 'montypython')
+        self.assertEqual(merged_map['customer'], 'examplecorp')
+        self.assertIsNone(merged_map['age'])
