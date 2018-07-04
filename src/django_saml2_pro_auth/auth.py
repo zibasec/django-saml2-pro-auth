@@ -30,17 +30,28 @@ def get_provider_index(request):
 
     raise SAMLError("The provider: %s was not found in settings.py" % provider)
 
+
 def get_clean_map(user_map, saml_data):
     final_map = dict()
-    for usr_k, usr_v in iteritems(user_map):
-        if type(usr_v) is dict:
+    strict_mapping = getattr(settings, "SAML_USERS_STRICT_MAPPING", True)
 
-            if 'index' in usr_v:
-                final_map[usr_k] = saml_data[usr_v['key']][usr_v['index']]
+    for usr_k, usr_v in iteritems(user_map):
+        if strict_mapping:
+            if type(usr_v) is dict:
+                if 'index' in usr_v:
+                    final_map[usr_k] = saml_data[usr_v['key']][usr_v['index']]
+                else:
+                    final_map[usr_k] = saml_data[usr_v['key']]
             else:
-                final_map[usr_k] = saml_data[usr_v['key']]
+                final_map[usr_k] = saml_data[user_map[usr_k]]
         else:
-            final_map[usr_k] = saml_data[ user_map[usr_k] ]
+            if type(usr_v) is dict:
+                if 'index' in usr_v:
+                    final_map[usr_k] = saml_data[usr_v['key']][usr_v['index']] if usr_v['key'] in saml_data else None
+                else:
+                    final_map[usr_k] = saml_data[usr_v['key']] if usr_v['key'] in saml_data else None
+            else:
+                final_map[usr_k] = saml_data[user_map[usr_k]] if user_map[usr_k] in saml_data else None
 
     return final_map
 
