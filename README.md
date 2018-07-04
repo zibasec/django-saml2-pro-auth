@@ -5,6 +5,8 @@
 
 ![Python versions](https://img.shields.io/pypi/pyversions/django-saml2-pro-auth.svg) [![Django versions](https://img.shields.io/badge/django-1.8%2C%201.10%2C%201.11-44B78B.svg)](https://pypi.org/project/django-saml2-pro-auth/)
 
+[![Downloads](http://pepy.tech/badge/django-saml2-pro-auth)](http://pepy.tech/project/django-saml2-pro-auth)
+
 
 # django-saml2-pro-auth
 SAML2 authentication backend for Django
