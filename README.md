@@ -226,9 +226,9 @@ SAML_USERS_SYNC_ATTRIBUTES = True
 
 **SAML_USERS_STRICT_MAPPING (optional):**
 Specifies if every user attribute defined in SAML_USER_MAP must be present
-in the saml response or not. If set to False, ensure your Django user model
-defines those attributes which your IdP doesn't expose in the SAML response.
-You could do this by setting null=True or a default value in your user model.
+in the saml response or not. If set to False, you can specify a default
+value in the "SAML_USER_MAP" dict in case the attribute is not set in the
+IdP response.
 
 Defaults to True
 

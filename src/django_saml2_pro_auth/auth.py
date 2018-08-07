@@ -47,9 +47,9 @@ def get_clean_map(user_map, saml_data):
         else:
             if type(usr_v) is dict:
                 if 'index' in usr_v:
-                    final_map[usr_k] = saml_data[usr_v['key']][usr_v['index']] if usr_v['key'] in saml_data else None
+                    final_map[usr_k] = saml_data[usr_v['key']][usr_v['index']] if usr_v['key'] in saml_data else usr_v['default'] if 'default' in usr_v.keys() else None
                 else:
-                    final_map[usr_k] = saml_data[usr_v['key']] if usr_v['key'] in saml_data else None
+                    final_map[usr_k] = saml_data[usr_v['key']] if usr_v['key'] in saml_data else usr_v['default'] if 'default' in usr_v.keys() else None
             else:
                 final_map[usr_k] = saml_data[user_map[usr_k]] if user_map[usr_k] in saml_data else None
 
