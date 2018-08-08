@@ -38,7 +38,9 @@ def get_clean_map(user_map, saml_data):
     for usr_k, usr_v in iteritems(user_map):
         if strict_mapping:
             if type(usr_v) is dict:
-                if 'index' in usr_v:
+                if 'default' in usr_v.keys():
+                    raise SAMLSettingsError('A default value is set for key %s in SAML_USER_MAP while SAML_USERS_STRICT_MAPPING is activated' % usr_k)
+                if 'index' in usr_v.keys():
                     final_map[usr_k] = saml_data[usr_v['key']][usr_v['index']]
                 else:
                     final_map[usr_k] = saml_data[usr_v['key']]
