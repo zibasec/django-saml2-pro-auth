@@ -30,13 +30,13 @@ You'll want to find the equivalent on your OS of choice.
 
 **Python 2**
 
-```
+```bash
   pip install django-saml2-pro-auth
 ```
 
 **Python 3**
 
-```
+```bash
   pip3 install django-saml2-pro-auth
 ```
 
@@ -226,14 +226,30 @@ SAML_USERS_SYNC_ATTRIBUTES = True
 
 **SAML_USERS_STRICT_MAPPING (optional):**
 Specifies if every user attribute defined in SAML_USER_MAP must be present
-in the saml response or not. If set to False, you can specify a default
-value in the "SAML_USER_MAP" dict in case the attribute is not set in the
-IdP response.
+in the saml response or not.
 
 Defaults to True
 
 ```python
 SAML_USERS_STRICT_MAPPING = False
+```
+
+If set to False, you can optionally specify a default value in the "SAML_USER_MAP"
+dict and it will set the value when the attribute is not present in the IdP response object.
+
+Example default value setting
+
+```python
+# set default value for is_superuser and is_staff to False
+SAML_USERS_STRICT_MAPPING = False
+SAML_USERS_MAP = [{
+    "MyProvider" : {
+      "email": dict(key="email", index=0),
+      "username": dict(key="username", index=0),
+      "is_superuser": dict(key="is_superuser", index=0, default=False),
+      "is_staff": dict(key="is_staff", index=0, default=False)
+    }
+}]
 ```
 
 **SAML_PROVIDERS:** This is exactly the same spec as OneLogin's [python-saml and python3-saml packages](https://github.com/onelogin/python3-saml#settings). The big difference is here you supply a list of dicts where the top most key(s) must map 1:1 to the top most keys in `SAML_USERS_MAP`. Also, this package allows you to ref the cert/key files via `open()` calls. This is to allow those of you with multiple external customers to login to your platform with any N number of IdPs.
