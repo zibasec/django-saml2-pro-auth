@@ -108,6 +108,28 @@ class TestAuth(TestCase):
         self.assertEqual(merged_map['email'], 'montypython@example.com')
         self.assertEqual(merged_map['name'], 'montypython')
         self.assertEqual(merged_map['customer'], 'examplecorp')
+    
+    
+    def test_mapping_users_with_default_values(self):
+        user_map = {
+            'email': 'Email',
+            'name': {
+                'index': 1,
+                'key': 'Username',
+                'default': 'testUsername'
+            },
+            'customer': {'key': 'Client', 'default': 'testClient'}
+        }
+
+        saml_map = {
+            'Username': ['','montypython'],
+            'lastName': 'Cleese',
+            'Email': 'montypython@example.com',
+            'firstName': 'John',
+            'Client': 'examplecorp'
+        }
+
+        self.assertRaises(SAMLSettingsError, get_clean_map, user_map, saml_map)
 
     @override_settings(SAML_USERS_STRICT_MAPPING=False)
     def test_non_strict_mapping_users_with_index_values(self):
@@ -183,3 +205,26 @@ class TestAuth(TestCase):
         self.assertEqual(merged_map['name'], 'montypython')
         self.assertEqual(merged_map['customer'], 'examplecorp')
         self.assertIsNone(merged_map['age'])
+
+    @override_settings(SAML_USERS_STRICT_MAPPING=False)
+    def test_non_strict_mapping_users_with_default_value(self):
+        user_map = {
+            "email": { 'key': 'Email' },
+            "name": { 'key': 'Username', 'index': 1 },
+            "is_superuser": { 'key': 'is_superuser', 'default': False },
+            "is_staff": { 'key': 'is_staff', 'default': True }
+        }
+
+        saml_map = {
+            'Username': ['','montypython'],
+            'lastName': 'Cleese',
+            'Email': 'montypython@example.com',
+            'firstName': 'John',
+            'Client': 'examplecorp'
+        }
+
+        merged_map = get_clean_map(user_map, saml_map)
+        self.assertEqual(merged_map['email'], 'montypython@example.com')
+        self.assertEqual(merged_map['name'], 'montypython')
+        self.assertEqual(merged_map['is_superuser'], False)
+        self.assertEqual(merged_map['is_staff'], True)
