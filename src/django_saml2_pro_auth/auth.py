@@ -61,7 +61,7 @@ def get_clean_map(user_map, saml_data):
 class Backend(object): # pragma: no cover
 
     def authenticate(self, request):
-        if not request.session['samlSessionIndex'] or not request.session['samlUserdata']:
+        if not request.session['samlUserdata']:
             return None
 
         User = get_user_model()
