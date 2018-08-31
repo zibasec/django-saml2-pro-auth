@@ -41,6 +41,10 @@ def saml_login(request):
             request.session['samlSessionIndex'] = auth.get_session_index()
             attributes = request.session['samlUserdata'].items()
             user = authenticate(request=request)
+            if user is None:
+                if hasattr(settings, 'SAML_FAIL_REDIRECT'):
+                    return HttpResponseRedirect(settings.SAML_FAIL_REDIRECT)
+                raise SAMLError('FAILED TO AUTHENTICATE SAML USER WITH BACKEND')
             login(request, user)
             if hasattr(settings, 'SAML_REDIRECT'):
                 return HttpResponseRedirect(settings.SAML_REDIRECT)

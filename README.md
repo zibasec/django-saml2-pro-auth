@@ -55,6 +55,8 @@ SAML_ROUTE = 'sso/saml/'
 
 SAML_REDIRECT = '/'
 
+SAML_FAIL_REDIRECT = '/login_failed'
+
 SAML_USERS_MAP = [{
     "MyProvider" : {
       "email": dict(key="Email", index=0),
@@ -165,6 +167,8 @@ urlpatterns = [
 So first import the urls via `import django_saml2_pro_auth.urls as saml_urls` (it's up to you if you want name it or not). Then add it to your patterns via `url(r'^', include(saml_urls, namespace='saml'))`. This example will give you the default routes that this auth backend provides.
 
 **SAML_REDIRECT (optional, default=None):** This tells the auth backend where to redirect users after they've logged in via the IdP. **NOTE**: This is not needed for _most_ users. Order of precedence is: SAML_REDIRECT value (if defined), RELAY_STATE provided in the SAML response, and the fallback is simply to go to the root path of your application.
+
+**SAML_FAIL_REDIRECT (optional, default=None):** This tells the auth backend where to redirect when the SAML authentication fails on the Django side. When using the supplied backend this can happen when a user is marked with is_active=False in the Django DB while still being able to authenticate with the IdP. When SAML_FAIl_REDIRECT has not been set, a SAMLError is raised to avoid redirect loops.
 
 **SAML_USERS_MAP (required):** This is what makes it possible to map the attributes as they come from your IdP into attributes that are part of your User model in Django. There a few ways you can define this. The dict keys (the left-side) are the attributes as defined in YOUR User model, the dict values (the right-side) are the attributes as supplied by your IdP.
 

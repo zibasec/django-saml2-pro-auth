@@ -82,7 +82,8 @@ class Backend(object): # pragma: no cover
         else:
             user, _ = User.objects.get_or_create(defaults=final_map, **lookup_map)
 
-        return user
+        if user.is_active:
+            return user
 
     def get_user(self, user_id):
         User = get_user_model()
