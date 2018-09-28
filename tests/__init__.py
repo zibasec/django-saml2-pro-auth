@@ -13,5 +13,7 @@ def init_test_settings():
                 'ENGINE': 'django.db.backends.sqlite3',
                 'NAME': 'testingdb'
             }
-        }
+        },
+
+        'ALLOWED_HOSTS': ['testserver', 'example.com'],
     }
