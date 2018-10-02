@@ -50,7 +50,7 @@ def init_saml_auth(req):
 
 
 def prepare_django_request(request):
-    http_host = request.META.get('HTTP_HOST', None)
+    http_host = request.get_host()
 
     if 'HTTP_X_FORWARDED_FOR' in request.META:
         server_port = None
