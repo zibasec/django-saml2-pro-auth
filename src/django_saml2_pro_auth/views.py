@@ -20,7 +20,7 @@ def saml_login(request):
     attributes = None
     req = prepare_django_request(request)
     auth = init_saml_auth(req)
-    
+
     if 'acs' in req['get_data']:
         # IDP initiated
         request_id = None
