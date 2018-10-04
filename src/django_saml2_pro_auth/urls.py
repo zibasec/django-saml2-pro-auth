@@ -1,6 +1,9 @@
 import re
-
-from django.urls import re_path
+try:
+    from django.urls import re_path as url
+except ImportError:
+    from django.conf.urls import url
+    
 from django.conf import settings
 
 from . import views
@@ -17,6 +20,6 @@ AUTH = r'^' + SAML_ROUTE + '/$'
 METADATA = r'^' + SAML_ROUTE + '/metadata/$'
 
 urlpatterns = [
-    re_path(AUTH, views.saml_login, name='saml2_auth'),
-    re_path(METADATA, views.metadata, name='metadata'),
+    url(AUTH, views.saml_login, name='saml2_auth'),
+    url(METADATA, views.metadata, name='metadata'),
 ]
