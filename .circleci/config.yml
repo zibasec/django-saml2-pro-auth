@@ -20,7 +20,7 @@ jobs:
       - run:
           name: 3.4 Tests 
           command: |
-            tox -e py34-18,py34-110,py34-111
+            tox -e py34-18,py34-110,py34-111,34-2,34-21
 
   testpy35:
     docker:
@@ -31,7 +31,7 @@ jobs:
       - run:
           name: 3.5 Tests 
           command: |
-            tox -e py35-18,py35-110,py35-111
+            tox -e py35-18,py35-110,py35-111,34-2,34-21
 
   testpy36:
     docker:
@@ -42,7 +42,7 @@ jobs:
       - run:
           name: 3.6 Tests 
           command: |
-            tox -e py36-111
+            tox -e py36-111,34-2,34-21
 
 workflows:
   version: 2
