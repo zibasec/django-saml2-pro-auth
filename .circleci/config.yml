@@ -3,6 +3,9 @@ jobs:
   testpy2:
     docker:
       - image: docker.pkg.github.com/defionscode/tox-ci/tox-ci:1
+        auth:
+          username: defionscode
+          password: $GH_KEY
     working_directory: ~/repo
     steps:
       - checkout
@@ -14,6 +17,9 @@ jobs:
   testpy34:
     docker:
       - image: docker.pkg.github.com/defionscode/tox-ci/tox-ci:1
+        auth:
+          username: defionscode
+          password: $GH_KEY
     working_directory: ~/repo
     steps:
       - checkout
@@ -25,6 +31,9 @@ jobs:
   testpy35:
     docker:
       - image: docker.pkg.github.com/defionscode/tox-ci/tox-ci:1
+        auth:
+          username: defionscode
+          password: $GH_KEY
     working_directory: ~/repo
     steps:
       - checkout
@@ -36,6 +45,9 @@ jobs:
   testpy36:
     docker:
       - image: docker.pkg.github.com/defionscode/tox-ci/tox-ci:1 
+        auth:
+          username: defionscode
+          password: $GH_KEY
     working_directory: ~/repo
     steps:
       - checkout
