@@ -2,7 +2,7 @@ version: 2
 jobs:
   testpy2:
     docker:
-      - image: nousdefions/tox:1.0
+      - image: themattrix/tox
     working_directory: ~/repo
     steps:
       - checkout
@@ -13,7 +13,7 @@ jobs:
 
   testpy34:
     docker:
-      - image: nousdefions/tox:1.0
+      - image: themattrix/tox
     working_directory: ~/repo
     steps:
       - checkout
@@ -24,18 +24,18 @@ jobs:
 
   testpy35:
     docker:
-      - image: nousdefions/tox:1.0
+      - image: themattrix/tox
     working_directory: ~/repo
     steps:
       - checkout
       - run:
-          name: 3.5 Tests 
+          name: 3.5 Tests
           command: |
             tox -e py35-18,py35-110,py35-111,34-2,34-21
 
   testpy36:
     docker:
-      - image: nousdefions/tox:1.0
+      - image: themattrix/tox 
     working_directory: ~/repo
     steps:
       - checkout
