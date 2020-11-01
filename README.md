@@ -219,7 +219,6 @@ Defaults to False
 SAML_USERS_SYNC_ATTRIBUTES = True
 ```
 
-
 **SAML_USERS_STRICT_MAPPING (optional):**
 Specifies if every user attribute defined in SAML_USER_MAP must be present
 in the saml response or not.
