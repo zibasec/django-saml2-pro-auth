@@ -1,16 +1,24 @@
-[![Pypi version](https://img.shields.io/pypi/v/django-saml2-pro-auth.svg)](https://pypi.org/project/django-saml2-pro-auth/) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/MindPointGroup/django-saml2-pro-auth/master/LICENSE)
+# Django SAML2 Pro Auth
 
-[![Coverage Status](https://coveralls.io/repos/github/MindPointGroup/django-saml2-pro-auth/badge.svg?branch=master)](https://coveralls.io/github/MindPointGroup/django-saml2-pro-auth?branch=master) [![CircleCI](https://circleci.com/gh/MindPointGroup/django-saml2-pro-auth.svg?style=svg)](https://circleci.com/gh/MindPointGroup/django-saml2-pro-auth)
-
-
-![Python versions](https://img.shields.io/pypi/pyversions/django-saml2-pro-auth.svg) [![Django versions](https://img.shields.io/badge/django-1.8%2C%201.10%2C%201.11-44B78B.svg)](https://pypi.org/project/django-saml2-pro-auth/)
-
-[![Downloads](http://pepy.tech/badge/django-saml2-pro-auth)](http://pepy.tech/project/django-saml2-pro-auth)
-
-
-# django-saml2-pro-auth
 SAML2 authentication backend for Django
 
+---
+
+[![build-status-badge]][build-status]
+[![pypi-version-badge]][pypi]
+[![license-badge]][license]
+
+[![pypi-pyverions-badge]][pypi]
+[![pypi-djverions-badge]][pypi]
+[![downloads-badge]][downloads]
+
+## Requirements
+
+- Python (3.6, 3.7, 3.8, 3.9)
+- Django (2.2, 3.0, 3.1)
+- python3-saml (>=1.9.0)
+
+We **recommend** and only support patched versions of Python and Django that are still receiving updates.
 
 ## Installation
 
@@ -18,30 +26,13 @@ SAML2 authentication backend for Django
 
 ### Prerequisites
 
-On your OS you must install libxml, xmlsec1 and openssl (dev packages where available). The package name will vary by OS.
+The [python3-saml] package depends on the [xmlsec] package which requires the installation of native C libraries on your OS of choice.
 
-For example, on Ubuntu the prerequisite package names are `build-essential libssl-dev libffi-dev python-dev libxml2-dev libxmlsec1 xmlsec1 libxmlsec1-openssl libxmlsec1-dev`
-
-You'll want to find the equivalent on your OS of choice.
+You will want to follow the instructions for setting up the native dependencies on your OS of choice.
 
 ## Configuration
 
-### Installation
-
-**Python 2**
-
-```bash
-  pip install django-saml2-pro-auth
-```
-
-**Python 3**
-
-```bash
-  pip3 install django-saml2-pro-auth
-```
-
-
-### settings.py
+### Django Settings
 
 Here is an example full configuration. Scroll down to read about each option
 
@@ -164,6 +155,7 @@ urlpatterns = [
 ]
 
 ```
+
 So first import the urls via `import django_saml2_pro_auth.urls as saml_urls` (it's up to you if you want name it or not). Then add it to your patterns via `url(r'^', include(saml_urls, namespace='saml'))`. This example will give you the default routes that this auth backend provides.
 
 **SAML_REDIRECT (optional, default=None):** This tells the auth backend where to redirect users after they've logged in via the IdP. **NOTE**: This is not needed for _most_ users. Order of precedence is: SAML_REDIRECT value (if defined), RELAY_STATE provided in the SAML response, and the fallback is simply to go to the root path of your application.
@@ -227,7 +219,6 @@ Defaults to False
 SAML_USERS_SYNC_ATTRIBUTES = True
 ```
 
-
 **SAML_USERS_STRICT_MAPPING (optional):**
 Specifies if every user attribute defined in SAML_USER_MAP must be present
 in the saml response or not.
@@ -258,7 +249,6 @@ SAML_USERS_MAP = [{
 
 **SAML_PROVIDERS:** This is exactly the same spec as OneLogin's [python-saml and python3-saml packages](https://github.com/onelogin/python3-saml#settings). The big difference is here you supply a list of dicts where the top most key(s) must map 1:1 to the top most keys in `SAML_USERS_MAP`. Also, this package allows you to ref the cert/key files via `open()` calls. This is to allow those of you with multiple external customers to login to your platform with any N number of IdPs.
 
-
 ## Routes
 
 | **Route**                                 | **Uses**                                                                                                                                                                                                              |
@@ -271,16 +261,66 @@ SAML_USERS_MAP = [{
 
 The following are things that you may run into issue with. Here are some tips.
 
-* Ensure the value of the SP `entityId` config matches up with what you supply in your IdPs configuration.
-* Your IdP may default to particular Signature type, usually `Assertion` or `Response` are the options. Depending on how you define your SAML provider config, it will dictate what this value should be.
+- Ensure the value of the SP `entityId` config matches up with what you supply in your IdPs configuration.
+- Your IdP may default to particular Signature type, usually `Assertion` or `Response` are the options. Depending on how you define your SAML provider config, it will dictate what this value should be.
 
-# Wishlist and TODOs
+## Wishlist and TODOs
 
 The following are things that arent present yet but would be cool to have
 
-* Implement logic for Single Logout Service
-* ADFS IdP support
-* Integration test with full on mock saml interactions to test the actual backend auth
-* Tests add coverage to views and the authenticate() get_user() methods in the auth backend
-* models (with multi-tentant support) for idp and sp in order to facilitate management via django admin
-* Tests/Support for Django 2
+- Implement logic for Single Logout Service
+- ADFS IdP support
+- Integration test with full on mock saml interactions to test the actual backend auth
+- Tests add coverage to views and the authenticate() get_user() methods in the auth backend
+- models (with multi-tentant support) for idp and sp in order to facilitate management via django admin
+- Tests/Support for Django 2
+
+## Release Process
+
+The following release process is manual for now but may be integrated into a CI action in the future.
+
+All code contributions are merged to the main branch through a standard pull request, test, review, merge process. At certain intervals new releases should be cut and pushed to PyPI. This is the standard process for creating new releases from the main branch.
+
+1. Update the version information in `setup.cfg` e.g., `version = X.Y.Z`
+1. Create a new `git` tag with the same version 
+
+    ```sh
+    git tag -a -s vX.Y.Z -m 'Version X.Y.Z'
+    ```
+
+    - `-s` requires you to have GPG and signing properly setup.
+1. Push the tags to the remote
+
+    ```sh
+    git push --follow-tags origin vX.Y.Z
+    ```
+
+1. Create the source and binary distributions and upload to PyPI.
+
+    ```sh
+    # runs
+    # python setup.py sdist bdist_wheel
+    # twine check dist/*
+    tox -f build
+    # upload to test pypi
+    twine upload testpypi dist/django_saml2_pro_auth-X.Y.Z-*
+    # upload to production pypi
+    twine upload dist/django_saml2_pro_auth-X.Y.Z-*
+    ```
+
+1. Create a release on GitHub
+
+**TODO** Add a proper CHANGELOG to release process.
+
+[build-status]: https://github.com/zibasec/django-saml2-pro-auth/actions?query=workflow%3Abuild-and-test+branch%3Amaster
+[build-status-badge]: https://img.shields.io/github/workflow/status/zibasec/django-saml2-pro-auth/build-and-test/master
+[license]: https://raw.githubusercontent.com/zibasec/django-saml2-pro-auth/master/LICENSE
+[license-badge]: https://img.shields.io/github/license/zibasec/django-saml2-pro-auth
+[pypi]: https://pypi.org/project/django-saml2-pro-auth/
+[pypi-version-badge]: https://img.shields.io/pypi/v/django-saml2-pro-auth.svg
+[pypi-pyverions-badge]: https://img.shields.io/pypi/pyversions/django-saml2-pro-auth.svg
+[pypi-djverions-badge]: https://img.shields.io/pypi/djversions/django-saml2-pro-auth.svg
+[downloads]: https://pepy.tech/project/django-saml2-pro-auth
+[downloads-badge]: https://pepy.tech/badge/django-saml2-pro-auth
+[python3-saml]: https://github.com/onelogin/python3-saml
+[xmlsec]: https://pypi.org/project/xmlsec/

@@ -1,0 +1,30 @@
+name: build-and-test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: [3.6, 3.7, 3.8, 3.9]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install shared library dependencies
+        run: sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Upgrade packaging tools
+        run: pip install --upgrade pip setuptools virtualenv pipenv
+      - name: Install Tox and any other packages
+        run: pipenv install --dev
+      - name: Run Tox factors for ${{ matrix.python }}
+        run: TOXFACTOR=py$(sed 's/\.//' <<< "${{ matrix.python }}") pipenv run tox
