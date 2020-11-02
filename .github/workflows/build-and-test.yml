@@ -26,7 +26,5 @@ jobs:
         run: pip install --upgrade pip setuptools virtualenv pipenv
       - name: Install Tox and any other packages
         run: pipenv install --dev
-      - name: Run Tox factors for ${{ matrix.python-version }}
-        run: |
-          PY_VER=$(sed 's/\.//' <<< "${{ matrix.python-version }}")
-          TOXFACTOR=py$PY_VER pipenv run tox
+      - name: Run Tox factors for ${{ matrix.python }}
+        run: TOXFACTOR=py$(sed 's/\.//' <<< "${{ matrix.python }}") pipenv run tox
