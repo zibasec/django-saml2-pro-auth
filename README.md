@@ -275,6 +275,43 @@ The following are things that arent present yet but would be cool to have
 - models (with multi-tentant support) for idp and sp in order to facilitate management via django admin
 - Tests/Support for Django 2
 
+## Release Process
+
+The following release process is manual for now but may be integrated into a CI action in the future.
+
+All code contributions are merged to the main branch through a standard pull request, test, review, merge process. At certain intervals new releases should be cut and pushed to PyPI. This is the standard process for creating new releases from the main branch.
+
+1. Update the version information in `setup.cfg` e.g., `version = X.Y.Z`
+1. Create a new `git` tag with the same version 
+
+    ```sh
+    git tag -a -s vX.Y.Z -m 'Version X.Y.Z'
+    ```
+
+    - `-s` requires you to have GPG and signing properly setup.
+1. Push the tags to the remote
+
+    ```sh
+    git push --follow-tags origin vX.Y.Z
+    ```
+
+1. Create the source and binary distributions and upload to PyPI.
+
+    ```sh
+    # runs
+    # python setup.py sdist bdist_wheel
+    # twine check dist/*
+    tox -f build
+    # upload to test pypi
+    twine upload testpypi dist/django_saml2_pro_auth-X.Y.Z-*
+    # upload to production pypi
+    twine upload dist/django_saml2_pro_auth-X.Y.Z-*
+    ```
+
+1. Create a release on GitHub
+
+**TODO** Add a proper CHANGELOG to release process.
+
 [build-status]: https://github.com/zibasec/django-saml2-pro-auth/actions?query=workflow%3Abuild-and-test+branch%3Amaster
 [build-status-badge]: https://img.shields.io/github/workflow/status/zibasec/django-saml2-pro-auth/build-and-test/master
 [license]: https://raw.githubusercontent.com/zibasec/django-saml2-pro-auth/master/LICENSE
