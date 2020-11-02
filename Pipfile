@@ -21,6 +21,3 @@ tox-factor = "*"
 
 [packages]
 django-saml2-pro-auth = {editable = true, path = "."}
-
-[requires]
-python_version = "3.8"
