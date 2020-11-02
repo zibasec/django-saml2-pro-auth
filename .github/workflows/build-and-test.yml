@@ -16,6 +16,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Install shared library dependencies
+        run: sudo apt-get install libxml2-dev libxmlsec1-dev libxmlsec1-openssl
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
