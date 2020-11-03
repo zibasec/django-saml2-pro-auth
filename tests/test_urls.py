@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.test.utils import override_settings
 from django.urls import resolve, reverse
 
-from django_saml2_pro_auth.urls import AUTH, METADATA, SAML_ROUTE
+from saml2_pro_auth.urls import AUTH, METADATA, SAML_ROUTE
 
 
 class TestURLS(TestCase):

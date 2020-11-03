@@ -1,8 +1,8 @@
 from django.test import RequestFactory, TestCase
 from django.test.utils import override_settings
 
-from django_saml2_pro_auth.auth import get_clean_map, get_provider_index
-from django_saml2_pro_auth.utils import SAMLError, SAMLSettingsError
+from saml2_pro_auth.auth import get_clean_map, get_provider_index
+from saml2_pro_auth.utils import SAMLError, SAMLSettingsError
 
 
 class TestAuth(TestCase):

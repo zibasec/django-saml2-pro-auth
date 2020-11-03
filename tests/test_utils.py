@@ -3,7 +3,7 @@ from django.conf import settings
 from django.test import RequestFactory, TestCase
 from django.test.utils import override_settings
 
-from django_saml2_pro_auth.utils import (
+from saml2_pro_auth.utils import (
     SAMLSettingsError,
     get_provider_config,
     init_saml_auth,

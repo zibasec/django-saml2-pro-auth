@@ -39,7 +39,7 @@ Here is an example full configuration. Scroll down to read about each option
 ```python
 
 AUTHENTICATION_BACKENDS = [
-      'django_saml2_pro_auth.auth.Backend'
+      'saml2_pro_auth.auth.Backend'
 ]
 
 SAML_ROUTE = 'sso/saml/'
@@ -141,7 +141,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 import profiles.urls
 import accounts.urls
-import django_saml2_pro_auth.urls as saml_urls
+import saml2_pro_auth.urls as saml_urls
 
 from . import views
 
@@ -156,7 +156,7 @@ urlpatterns = [
 
 ```
 
-So first import the urls via `import django_saml2_pro_auth.urls as saml_urls` (it's up to you if you want name it or not). Then add it to your patterns via `url(r'^', include(saml_urls, namespace='saml'))`. This example will give you the default routes that this auth backend provides.
+So first import the urls via `import saml2_pro_auth.urls as saml_urls` (it's up to you if you want name it or not). Then add it to your patterns via `url(r'^', include(saml_urls, namespace='saml'))`. This example will give you the default routes that this auth backend provides.
 
 **SAML_REDIRECT (optional, default=None):** This tells the auth backend where to redirect users after they've logged in via the IdP. **NOTE**: This is not needed for _most_ users. Order of precedence is: SAML_REDIRECT value (if defined), RELAY_STATE provided in the SAML response, and the fallback is simply to go to the root path of your application.
 
@@ -303,9 +303,9 @@ All code contributions are merged to the main branch through a standard pull req
     # twine check dist/*
     tox -f build
     # upload to test pypi
-    twine upload testpypi dist/django_saml2_pro_auth-X.Y.Z-*
+    twine upload testpypi dist/*
     # upload to production pypi
-    twine upload dist/django_saml2_pro_auth-X.Y.Z-*
+    twine upload dist/*
     ```
 
 1. Create a release on GitHub

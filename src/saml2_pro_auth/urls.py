@@ -7,8 +7,6 @@ from django.conf import settings
 
 from . import views
 
-app_name = "django_saml2_pro_auth"
-
 SAML_ROUTE = getattr(settings, "SAML_ROUTE", "sso/saml")
 
 if SAML_ROUTE.strip()[-1] == "/":
