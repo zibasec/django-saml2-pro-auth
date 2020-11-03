@@ -27,4 +27,4 @@ jobs:
       - name: Install Tox and any other packages
         run: pipenv install --dev
       - name: Run Tox factors for ${{ matrix.python }}
-        run: TOXFACTOR=py$(sed 's/\.//' <<< "${{ matrix.python }}") pipenv run tox
+        run: TOXFACTOR=clean,py$(sed 's/\.//' <<< "${{ matrix.python }}") pipenv run tox
