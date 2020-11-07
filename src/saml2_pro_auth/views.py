@@ -40,7 +40,6 @@ class MetadataView(BaseSamlView):
     http_method_names = ["get", "head"]
 
     def get(self, request, *args, **kwargs):
-        print(request.session.items())
         saml_settings = self.saml_auth.get_settings()
         try:
             metadata = saml_settings.get_sp_metadata()

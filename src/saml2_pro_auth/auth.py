@@ -61,7 +61,7 @@ class Backend:  # pragma: no cover
         return is_active or is_active is None
 
     def authenticate(self, request, provider=None, saml_auth=None):
-        if not provider or not saml_auth: # request.session["samlUserdata"]:
+        if not provider or not saml_auth:
             return None
 
         request.session["samlUserdata"] = saml_auth.get_attributes()
