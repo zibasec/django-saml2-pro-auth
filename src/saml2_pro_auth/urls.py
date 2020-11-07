@@ -1,24 +1,31 @@
-try:
-    from django.urls import re_path as url
-except ImportError:
-    from django.conf.urls import url
+from django.urls import path, register_converter
 
-from django.conf import settings
+from .views import AcsView, SsoView, MetadataView, saml_login, metadata
+from .settings import app_settings
 
-from . import views
+SAML_ROUTE = f"{app_settings.SAML_ROUTE.strip('/')}"
+METADATA = f"{SAML_ROUTE}/metadata/"
 
-SAML_ROUTE = getattr(settings, "SAML_ROUTE", "sso/saml")
+app_name = 'saml2_pro_auth'
 
-if SAML_ROUTE.strip()[-1] == "/":
-    SAML_ROUTE = SAML_ROUTE.rstrip("/")
+class ProviderConverter:
+    regex = "[\w-]+" # pylint: disable=anomalous-backslash-in-string
 
-if SAML_ROUTE.strip()[0] == "/":
-    SAML_ROUTE = SAML_ROUTE.lstrip("/")
+    def to_python(self, value):
+        try:
+            return {value: app_settings.SAML_PROVIDERS[value]}
+        except KeyError:
+            raise ValueError
 
-AUTH = r"^" + SAML_ROUTE + "/$"
-METADATA = r"^" + SAML_ROUTE + "/metadata/$"
+    def to_url(self, value):
+        return value
 
+register_converter(ProviderConverter, "samlp")
+
+
+# Class based views
 urlpatterns = [
-    url(AUTH, views.saml_login, name="saml2_auth"),
-    url(METADATA, views.metadata, name="metadata"),
+    path(f"{SAML_ROUTE}/acs/<samlp:provider>/", AcsView.as_view(), name="acs"),
+    path(f"{SAML_ROUTE}/sso/<samlp:provider>/", SsoView.as_view(), name="sso"),
+    path(f"{SAML_ROUTE}/metadata/<samlp:provider>/", MetadataView.as_view(), name="metadata"),
 ]
