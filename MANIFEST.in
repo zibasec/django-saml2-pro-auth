@@ -6,3 +6,4 @@ include *.yaml
 recursive-include tests *.py
 recursive-include tests *.crt
 recursive-include tests *.key
+recursive-exclude example *

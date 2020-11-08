@@ -1,0 +1,5 @@
+# Minimal requirements file
+# These should install the rest (Django, python3-saml, xmlsec, etc)
+-e ..
+gunicorn==20.0.4
+whitenoise==5.2.0
