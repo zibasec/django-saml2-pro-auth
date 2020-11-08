@@ -2,8 +2,8 @@ from django.test import TestCase
 from django.test.utils import override_settings
 from django.urls import resolve, reverse
 
-import saml2_pro_auth.urls as urls
 import saml2_pro_auth.function_urls as function_urls
+import saml2_pro_auth.urls as urls
 
 
 class TestURLS(TestCase):
@@ -12,9 +12,15 @@ class TestURLS(TestCase):
         self.assertEqual(urls.METADATA, "saml/metadata/")
 
     def test_url_names_with_start_forward_slash(self):
-        self.assertEqual(reverse("acs", kwargs={"provider": "testP"}), "/saml/acs/testP/")
-        self.assertEqual(reverse("sso", kwargs={"provider": "testP"}), "/saml/sso/testP/")
-        self.assertEqual(reverse("metadata", kwargs={"provider": "testP"}), "/saml/metadata/testP/")
+        self.assertEqual(
+            reverse("acs", kwargs={"provider": "testP"}), "/saml/acs/testP/"
+        )
+        self.assertEqual(
+            reverse("sso", kwargs={"provider": "testP"}), "/saml/sso/testP/"
+        )
+        self.assertEqual(
+            reverse("metadata", kwargs={"provider": "testP"}), "/saml/metadata/testP/"
+        )
 
     def test_url_resolving_with_start_forward_slash(self):
         self.assertEqual(resolve("/saml/acs/classProvider/").view_name, "acs")

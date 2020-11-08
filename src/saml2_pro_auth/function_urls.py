@@ -1,12 +1,12 @@
 from django.urls import path
 
-from .views import saml_login, metadata
 from .settings import app_settings
+from .views import metadata, saml_login
 
 SAML_ROUTE = f"{app_settings.SAML_ROUTE.strip('/')}"
 METADATA = f"{SAML_ROUTE}/metadata/"
 
-app_name = 'saml2_pro_auth'
+app_name = "saml2_pro_auth"
 
 # Legacy function views
 urlpatterns = [

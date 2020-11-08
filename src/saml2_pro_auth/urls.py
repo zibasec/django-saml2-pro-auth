@@ -1,15 +1,16 @@
 from django.urls import path, register_converter
 
-from .views import AcsView, SsoView, MetadataView, saml_login, metadata
 from .settings import app_settings
+from .views import AcsView, MetadataView, SsoView, metadata, saml_login
 
 SAML_ROUTE = f"{app_settings.SAML_ROUTE.strip('/')}"
 METADATA = f"{SAML_ROUTE}/metadata/"
 
-app_name = 'saml2_pro_auth'
+app_name = "saml2_pro_auth"
+
 
 class ProviderConverter:
-    regex = "[\w-]+" # pylint: disable=anomalous-backslash-in-string
+    regex = "[\w-]+"  # pylint: disable=anomalous-backslash-in-string
 
     def to_python(self, value):
         try:
@@ -20,6 +21,7 @@ class ProviderConverter:
     def to_url(self, value):
         return value
 
+
 register_converter(ProviderConverter, "samlp")
 
 
@@ -27,5 +29,9 @@ register_converter(ProviderConverter, "samlp")
 urlpatterns = [
     path(f"{SAML_ROUTE}/acs/<samlp:provider>/", AcsView.as_view(), name="acs"),
     path(f"{SAML_ROUTE}/sso/<samlp:provider>/", SsoView.as_view(), name="sso"),
-    path(f"{SAML_ROUTE}/metadata/<samlp:provider>/", MetadataView.as_view(), name="metadata"),
+    path(
+        f"{SAML_ROUTE}/metadata/<samlp:provider>/",
+        MetadataView.as_view(),
+        name="metadata",
+    ),
 ]

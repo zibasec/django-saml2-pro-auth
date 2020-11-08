@@ -1,9 +1,10 @@
 from datetime import datetime, timezone
+
 from django.contrib.auth import get_user_model
 from django.core.cache import caches
 
-from .utils import SAMLSettingsError
 from .settings import app_settings
+from .utils import SAMLSettingsError
 
 
 def get_clean_map(user_map, saml_data):
@@ -51,13 +52,12 @@ def get_clean_map(user_map, saml_data):
 
 
 class Backend:  # pragma: no cover
-
     def user_can_authenticate(self, user):
         """
         Reject users with is_active=False. Custom user models that don't have
         that attribute are allowed.
         """
-        is_active = getattr(user, 'is_active', None)
+        is_active = getattr(user, "is_active", None)
         return is_active or is_active is None
 
     def authenticate(self, request, provider=None, saml_auth=None):
@@ -68,14 +68,18 @@ class Backend:  # pragma: no cover
         request.session["samlNameId"] = saml_auth.get_nameid()
         request.session["samlSessionIndex"] = saml_auth.get_session_index()
         assertion_id = saml_auth.get_last_assertion_id()
-        not_on_or_after = datetime.fromtimestamp(saml_auth.get_last_assertion_not_on_or_after(), tz=timezone.utc)
+        not_on_or_after = datetime.fromtimestamp(
+            saml_auth.get_last_assertion_not_on_or_after(), tz=timezone.utc
+        )
         assertion_timeout = not_on_or_after - datetime.now(tz=timezone.utc)
 
         if app_settings.SAML_REPLAY_PROTECTION:
             # Store the assertion id in cache so we can ensure only once
             # processing during validity period
             cache = caches[app_settings.SAML_CACHE]
-            if not cache.add(assertion_id, assertion_id, timeout=assertion_timeout.seconds):
+            if not cache.add(
+                assertion_id, assertion_id, timeout=assertion_timeout.seconds
+            ):
                 # Check if adding the key worked, if the return is false the key already exists
                 # so we fail auth. This should let us only process an assertion ID once
                 return None
@@ -98,7 +102,9 @@ class Backend:  # pragma: no cover
         lookup_map = {lookup_attribute: final_map[lookup_attribute_name]}
 
         if create_users and sync_attributes:
-            user, _ = UserModel.objects.update_or_create(defaults=final_map, **lookup_map)
+            user, _ = UserModel.objects.update_or_create(
+                defaults=final_map, **lookup_map
+            )
         elif create_users:
             user, _ = UserModel.objects.get_or_create(defaults=final_map, **lookup_map)
         else:
@@ -115,5 +121,6 @@ class Backend:  # pragma: no cover
             return None
 
         return user if self.user_can_authenticate(user) else None
+
 
 SamlBackend = Backend

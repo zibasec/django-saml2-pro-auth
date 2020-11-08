@@ -1,5 +1,6 @@
 from django.conf import settings
 
+
 class Settings:
     """
     A simple settings object that wraps Django settings
@@ -7,19 +8,21 @@ class Settings:
 
     @property
     def SAML_ROUTE(self):
-        return getattr(settings, "SAML_ROUTE", 'saml')
+        return getattr(settings, "SAML_ROUTE", "saml")
 
     @property
     def SAML_REDIRECT(self):
-        return getattr(settings, "SAML_REDIRECT", '')
+        return getattr(settings, "SAML_REDIRECT", "")
 
     @property
     def SAML_FAIL_REDIRECT(self):
-        return getattr(settings, "SAML_FAIL_REDIRECT", getattr(settings, "LOGIN_REDIRECT_URL", "/"))
+        return getattr(
+            settings, "SAML_FAIL_REDIRECT", getattr(settings, "LOGIN_REDIRECT_URL", "/")
+        )
 
     @property
     def SAML_USERS_LOOKUP_ATTRIBUTE(self):
-        return getattr(settings, "SAML_USERS_LOOKUP_ATTRIBUTE", 'username')
+        return getattr(settings, "SAML_USERS_LOOKUP_ATTRIBUTE", "username")
 
     @property
     def SAML_USERS_SYNC_ATTRIBUTES(self):

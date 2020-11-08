@@ -36,14 +36,8 @@ MOCK_SAML2_CONFIG = {
             }
         },
         "contactPerson": {
-            "technical": {
-                "givenName": "Jane Doe",
-                "emailAddress": "jdoe@examp.com"
-            },
-            "support": {
-                "givenName": "Jane Doe",
-                "emailAddress": "jdoe@examp.com"
-            }
+            "technical": {"givenName": "Jane Doe", "emailAddress": "jdoe@examp.com"},
+            "support": {"givenName": "Jane Doe", "emailAddress": "jdoe@examp.com"},
         },
         "security": {
             "name_id_encrypted": False,
@@ -99,14 +93,8 @@ MOCK_SAML2_CONFIG = {
             }
         },
         "contactPerson": {
-            "technical": {
-                "givenName": "Jane Doe",
-                "emailAddress": "jdoe@examp.com"
-            },
-            "support": {
-                "givenName": "Jane Doe",
-                "emailAddress": "jdoe@examp.com"
-            }
+            "technical": {"givenName": "Jane Doe", "emailAddress": "jdoe@examp.com"},
+            "support": {"givenName": "Jane Doe", "emailAddress": "jdoe@examp.com"},
         },
         "security": {
             "name_id_encrypted": False,
@@ -122,5 +110,5 @@ MOCK_SAML2_CONFIG = {
             "signature_algorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1",
             "digestAlgorithm": "http://www.w3.org/2001/04/xmlenc#sha256",
         },
-    }
+    },
 }

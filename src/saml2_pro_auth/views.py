@@ -1,10 +1,6 @@
 from django.contrib.auth import REDIRECT_FIELD_NAME, authenticate, login
-from django.http import (
-    HttpResponse,
-    HttpResponseBadRequest,
-    HttpResponseServerError,
-)
 from django.core.cache import caches
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseServerError
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -54,17 +50,13 @@ class MetadataView(BaseSamlView):
         return HttpResponse(content=metadata, content_type="text/xml")
 
 
-
-@method_decorator(csrf_exempt, name='dispatch')
+@method_decorator(csrf_exempt, name="dispatch")
 class AcsView(BaseSamlView):
     http_method_names = ["post"]
 
     def post(self, request, *args, **kwargs):
         request_id = request.get_signed_cookie(
-            "sp_auth",
-            default=None,
-            salt="saml2_pro_auth.authnrequestid",
-            max_age=300
+            "sp_auth", default=None, salt="saml2_pro_auth.authnrequestid", max_age=300
         )
         if not self.allow_idp_initiated_auth and request_id is None:
             return HttpResponseBadRequest("Bad Request")
@@ -73,7 +65,9 @@ class AcsView(BaseSamlView):
         errors = self.saml_auth.get_errors()
 
         if not errors:
-            user = authenticate(request=request, provider=self.provider_name, saml_auth=self.saml_auth)
+            user = authenticate(
+                request=request, provider=self.provider_name, saml_auth=self.saml_auth
+            )
             if user is not None:
                 login(request, user)
 
@@ -85,10 +79,14 @@ class AcsView(BaseSamlView):
                     != self.saml_req["post_data"]["RelayState"]
                 ):
                     response = redirect(
-                        self.saml_auth.redirect_to(self.saml_req["post_data"]["RelayState"])
+                        self.saml_auth.redirect_to(
+                            self.saml_req["post_data"]["RelayState"]
+                        )
                     )
                 else:
-                    response = redirect(OneLogin_Saml2_Utils.get_self_url(self.saml_req))
+                    response = redirect(
+                        OneLogin_Saml2_Utils.get_self_url(self.saml_req)
+                    )
             else:
                 request.session.flush()
                 response = redirect(app_settings.SAML_FAIL_REDIRECT)
@@ -102,12 +100,15 @@ class AcsView(BaseSamlView):
         response.delete_cookie("sp_auth")
         return response
 
+
 class SsoView(BaseSamlView):
     http_method_names = ["get", "head"]
 
     def get(self, request, *args, **kwargs):
         # SP-SSO start request
-        return_to = app_settings.SAML_REDIRECT or self.saml_req["get_data"].get(REDIRECT_FIELD_NAME, '')
+        return_to = app_settings.SAML_REDIRECT or self.saml_req["get_data"].get(
+            REDIRECT_FIELD_NAME, ""
+        )
         saml_request = self.saml_auth.login(return_to=return_to)
         response = redirect(saml_request)
         response.set_signed_cookie(
@@ -117,7 +118,7 @@ class SsoView(BaseSamlView):
             max_age=300,
             secure=self.saml_req["https"] == "on",
             httponly=True,
-            samesite=None
+            samesite=None,
         )
         return response
 
@@ -132,7 +133,9 @@ def saml_login(request):
 
     # SP initiated flow start
     if "sso" in req["get_data"] and "provider" in req["get_data"]:
-        return_to = app_settings.SAML_REDIRECT or req["get_data"].get(REDIRECT_FIELD_NAME, '')
+        return_to = app_settings.SAML_REDIRECT or req["get_data"].get(
+            REDIRECT_FIELD_NAME, ""
+        )
         saml_request = auth.login(return_to=return_to)
         response = redirect(saml_request)
         response.set_signed_cookie(
@@ -142,7 +145,7 @@ def saml_login(request):
             max_age=300,
             secure=req["https"] == "on",
             httponly=True,
-            samesite=None
+            samesite=None,
         )
         return response
 
@@ -153,7 +156,9 @@ def saml_login(request):
         errors = auth.get_errors()
 
         if not errors:
-            user = authenticate(request=request, provider=req["get_data"]["provider"], saml_auth=auth)
+            user = authenticate(
+                request=request, provider=req["get_data"]["provider"], saml_auth=auth
+            )
             if user is not None:
                 login(request, user)
                 if app_settings.SAML_REDIRECT:
