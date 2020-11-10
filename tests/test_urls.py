@@ -5,9 +5,6 @@ import saml2_pro_auth.urls as urls
 
 
 class TestURLS(TestCase):
-    def test_url_constants(self):
-        self.assertEqual(urls.SAML_ROUTE, "sso/saml")
-
     def test_url_names_with_start_forward_slash(self):
         self.assertEqual(
             reverse("saml2_pro_auth:acs", kwargs={"provider": "testP"}),

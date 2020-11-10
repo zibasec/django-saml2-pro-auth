@@ -23,7 +23,6 @@ DATABASES = {
 
 ALLOWED_HOSTS = ["*"]
 
-SAML_ROUTE = "/sso/saml/"
 ROOT_URLCONF = "tests.urls"
 
 SAML_PROVIDERS = MOCK_SAML2_CONFIG

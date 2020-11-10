@@ -5,6 +5,6 @@ from saml2_pro_auth.settings import app_settings
 
 
 class SettingsTests(SimpleTestCase):
-    @override_settings(SAML_ROUTE="foo")
+    @override_settings(SAML_AUTO_CREATE_USERS=False)
     def test_can_override(self):
-        self.assertEqual(app_settings.SAML_ROUTE, "foo")
+        self.assertEqual(app_settings.SAML_AUTO_CREATE_USERS, False)

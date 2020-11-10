@@ -42,10 +42,6 @@ class Settings:
     """
 
     @property
-    def SAML_ROUTE(self):
-        return getattr(settings, "SAML_ROUTE", "/sso/saml/")
-
-    @property
     def SAML_REDIRECT(self):
         return getattr(settings, "SAML_REDIRECT", "")
 

@@ -154,7 +154,7 @@ SAML_USERS_LOOKUP_ATTRIBUTE = ("username__iexact", "NameId")
 
 SAML_USERS_SYNC_ATTRIBUTES = True
 
-SAML_USERS_STRICT_MAPPING = True
+SAML_USERS_STRICT_MAPPING = False
 
 SAML_USERS_MAP = {
     "exampleProvider": {

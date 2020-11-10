@@ -92,7 +92,7 @@ class TestAuth(TestCase):
         merged_map = get_clean_map(user_map, saml_map)
         self.assertEqual(merged_map["email"], "montypython@example.com")
         self.assertEqual(merged_map["name"], "montypython")
-        self.assertIsNone(merged_map["age"])
+        self.assertTrue("age" not in merged_map)
 
     @override_settings(SAML_USERS_STRICT_MAPPING=False)
     def test_non_strict_mapping_users_without_index_values(self):
@@ -112,7 +112,7 @@ class TestAuth(TestCase):
         merged_map = get_clean_map(user_map, saml_map)
         self.assertEqual(merged_map["email"], "montypython@example.com")
         self.assertEqual(merged_map["name"], "montypython")
-        self.assertIsNone(merged_map["age"])
+        self.assertTrue("age" not in merged_map)
 
     @override_settings(SAML_USERS_STRICT_MAPPING=False)
     def test_non_strict_mapping_users_with_mixed_value_styles(self):
@@ -135,7 +135,7 @@ class TestAuth(TestCase):
         self.assertEqual(merged_map["email"], "montypython@example.com")
         self.assertEqual(merged_map["name"], "montypython")
         self.assertEqual(merged_map["customer"], "examplecorp")
-        self.assertIsNone(merged_map["age"])
+        self.assertTrue("age" not in merged_map)
 
     @override_settings(SAML_USERS_STRICT_MAPPING=False)
     def test_non_strict_mapping_users_with_default_value(self):

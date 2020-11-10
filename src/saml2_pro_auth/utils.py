@@ -1,5 +1,6 @@
 from typing import Tuple
 
+from django.urls import reverse
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
 
 from .models import SamlProvider
@@ -100,10 +101,12 @@ def build_sp_urls(req: dict, provider_name: str) -> dict:
     """
     protocol = "https" if req["https"] == "on" else "http"
 
-    path = f"{app_settings.SAML_ROUTE.strip('/')}/{provider_name}"
-    base_url = f"{protocol}://{req['http_host']}/{path}/"
-    acs_url = f"{base_url}acs/"
+    # Get a path for the provider and then cut off the end of the path
+    acs_path = reverse("saml2_pro_auth:acs", kwargs={"provider": provider_name})
+    base_path = f"{'/'.join(acs_path.split('/')[:-2])}/"
+    entity_url = f"{protocol}://{req['http_host']}{base_path}"
+    acs_url = f"{protocol}://{req['http_host']}{acs_path}"
     return {
-        "entityId": base_url,
+        "entityId": entity_url,
         "acs_url": acs_url,
     }

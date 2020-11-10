@@ -4,52 +4,44 @@ from django.contrib.auth import get_user_model
 from django.core.cache import caches
 
 from .settings import app_settings
-from .utils import SAMLSettingsError
+from .utils import SAMLError, SAMLSettingsError
 
 
-def get_clean_map(user_map: dict, saml_data: dict, nameid: str = "") -> dict:
+def get_clean_map(user_map: dict, saml_data: dict) -> dict:
     final_map = dict()
     strict_mapping = app_settings.SAML_USERS_STRICT_MAPPING
     for usr_k, usr_v in user_map.items():
-        if strict_mapping:
-            if isinstance(usr_v, dict):
-                if "default" in usr_v.keys():
-                    raise SAMLSettingsError(
-                        "A default value is set for key %s in SAML_USER_MAP while SAML_USERS_STRICT_MAPPING is activated"
-                        % usr_k
-                    )
-                if "index" in usr_v.keys():
-                    final_map[usr_k] = saml_data[usr_v["key"]][usr_v["index"]]
-                else:
-                    final_map[usr_k] = saml_data[usr_v["key"]][0]
-            else:
-                final_map[usr_k] = saml_data[user_map[usr_k]][0]
-        else:
-            if isinstance(usr_v, dict):
-                if "index" in usr_v:
-                    final_map[usr_k] = (
-                        saml_data[usr_v["key"]][usr_v["index"]]
-                        if usr_v["key"] in saml_data
-                        else usr_v["default"]
-                        if "default" in usr_v.keys()
-                        else None
-                    )
-                else:
-                    final_map[usr_k] = (
-                        saml_data[usr_v["key"]][0]
-                        if usr_v["key"] in saml_data
-                        else usr_v["default"]
-                        if "default" in usr_v.keys()
-                        else None
-                    )
-            else:
-                final_map[usr_k] = (
-                    saml_data[user_map[usr_k]][0]
-                    if user_map[usr_k] in saml_data
-                    else None
+        if strict_mapping and isinstance(usr_v, dict):
+            if "default" in usr_v.keys():
+                raise SAMLSettingsError(
+                    "A default value is set for key %s in SAML_USER_MAP \
+                    while SAML_USERS_STRICT_MAPPING is activated"
+                    % usr_k
                 )
 
-    final_map["NameId"] = nameid
+        index = 0
+        val = usr_v
+        default = None
+        if isinstance(usr_v, dict):
+            index = usr_v.get("index", 0)
+            val = usr_v.get("key", usr_k)
+            default = usr_v.get("default", None)
+
+        attr = saml_data.get(val, default)
+        if isinstance(attr, list):
+            attr = attr[index]
+
+        if attr is None:
+            if strict_mapping:
+                raise SAMLError(
+                    "Response missing attribute %s while SAML_USERS_STRICT_MAPPING is activated"
+                    % usr_k
+                )
+
+            continue
+
+        final_map[usr_k] = attr
+
     return final_map
 
 
@@ -66,9 +58,6 @@ class Backend:  # pragma: no cover
         if not provider or not saml_auth:
             return None
 
-        request.session["samlUserdata"] = saml_auth.get_attributes()
-        request.session["samlNameId"] = saml_auth.get_nameid()
-        request.session["samlSessionIndex"] = saml_auth.get_session_index()
         assertion_id = saml_auth.get_last_assertion_id()
         not_on_or_after = datetime.fromtimestamp(
             saml_auth.get_last_assertion_not_on_or_after(), tz=timezone.utc
@@ -88,35 +77,49 @@ class Backend:  # pragma: no cover
 
         UserModel = get_user_model()
 
-        final_map = get_clean_map(
-            user_map, request.session["samlUserdata"], request.session["samlNameId"]
-        )
+        final_map = get_clean_map(user_map, saml_auth.get_attributes())
 
-        lookup_map = app_settings.SAML_USERS_LOOKUP_ATTRIBUTE
-        if isinstance(lookup_map, str):
-            lookup_map = {lookup_map: final_map["NameId"]}
-        elif isinstance(lookup_map, tuple):
-            lookup_map = {lookup_map[0]: final_map[lookup_map[1]]}
+        lookup_attr = app_settings.SAML_USERS_LOOKUP_ATTRIBUTE
+        lookup_map = dict()
+        if isinstance(lookup_attr, str):
+            lookup_map = {lookup_attr: saml_auth.get_nameid()}
+        elif isinstance(lookup_attr, (tuple, list)):
+            if lookup_attr[1] == "NameId":
+                lookup_map = {lookup_attr[0]: saml_auth.get_nameid()}
+            else:
+                lookup_map = {lookup_attr[0]: final_map[lookup_attr[1]]}
+        else:
+            raise SAMLSettingsError(
+                "The value of SAML_USERS_LOOKUP_ATTRIBUTE must be a str, tuple, or list"
+            )
 
         sync_attributes = app_settings.SAML_USERS_SYNC_ATTRIBUTES
         create_users = app_settings.SAML_AUTO_CREATE_USERS
 
-        # lookup_map = lookup_attribute # {lookup_attribute: final_map[lookup_attribute_name]}
-
-        if create_users and sync_attributes:
-            user, _ = UserModel._default_manager.update_or_create(
-                defaults=final_map, **lookup_map
-            )
-        elif create_users:
-            user, _ = UserModel._default_manager.get_or_create(
-                defaults=final_map, **lookup_map
-            )
-        else:
-            user = UserModel._default_manager.get(**lookup_map)
-            if sync_attributes:
-                user.update(**final_map)
+        try:
+            if create_users and sync_attributes:
+                user, _ = UserModel._default_manager.update_or_create(
+                    defaults=final_map, **lookup_map
+                )
+            elif create_users:
+                user, _ = UserModel._default_manager.get_or_create(
+                    defaults=final_map, **lookup_map
+                )
+            else:
+                user = UserModel._default_manager.get(**lookup_map)
+                if sync_attributes:
+                    try:
+                        user.update(**final_map)
+                    except Exception:
+                        pass
+        except Exception as err:
+            return None
 
         if self.user_can_authenticate(user):
+            # Only write data into the session if everything is successful and the user can auth
+            request.session["samlUserdata"] = saml_auth.get_attributes()
+            request.session["samlNameId"] = saml_auth.get_nameid()
+            request.session["samlSessionIndex"] = saml_auth.get_session_index()
             return user
 
     def get_user(self, user_id):
