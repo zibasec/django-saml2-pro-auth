@@ -25,6 +25,6 @@ jobs:
       - name: Upgrade packaging tools
         run: pip install --upgrade pip setuptools
       - name: Install Tox and any other packages
-        run: python -m venv venv && source venv/bin/activate && pip install -r requirements-dev.txt
+        run: pip install -r requirements-dev.txt
       - name: Run Tox factors for ${{ matrix.python }}
         run: TOXFACTOR=clean,py$(sed 's/\.//' <<< "${{ matrix.python }}") tox
