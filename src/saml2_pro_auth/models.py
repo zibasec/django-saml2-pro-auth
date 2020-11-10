@@ -1,17 +1,18 @@
 import uuid
 from copy import deepcopy
 
+from django.db import models
 from django.urls import reverse
 from django.utils.crypto import get_random_string
-from django.db import models
 
-from .settings import app_settings
 from .constants import (
     HTTP_POST_BINDING,
     NAMEID_FORMAT_CHOICES,
     SAML_PROTOCOL_BINDINGS,
     UNSPECIFIED,
 )
+from .settings import app_settings
+
 
 def make_provider_slug():
     return get_random_string(length=16)
@@ -20,10 +21,7 @@ def make_provider_slug():
 class SamlProvider(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     provider_slug = models.SlugField(
-        max_length=16,
-        unique=True,
-        editable=False,
-        default=make_provider_slug
+        max_length=16, unique=True, editable=False, default=make_provider_slug
     )
     name = models.CharField(
         "Name",
@@ -35,18 +33,18 @@ class SamlProvider(models.Model):
         "IdP Issuer (Entity ID)",
         help_text="The Issuer or Entity ID from your Identity Provider.",
         blank=False,
-        max_length=1024
+        max_length=1024,
     )
     idp_x509 = models.TextField(
         "IdP Certificate",
         help_text="A PEM encoded public certificate provided by your Identity Provider.",
-        blank=False
+        blank=False,
     )
     idp_sso_url = models.TextField(
         "IdP Single Sign-On URL",
         help_text="The single sign-on service URL provided by your IdP.",
         blank=False,
-        max_length=2048
+        max_length=2048,
     )
     idp_sso_binding = models.CharField(
         "IdP Single Sign-On Binding",
@@ -54,7 +52,7 @@ class SamlProvider(models.Model):
         choices=SAML_PROTOCOL_BINDINGS,
         default=HTTP_POST_BINDING,
         blank=False,
-        max_length=255
+        max_length=255,
     )
     nameidformat = models.CharField(
         "NameID Format",
@@ -62,7 +60,7 @@ class SamlProvider(models.Model):
         choices=NAMEID_FORMAT_CHOICES,
         default=UNSPECIFIED,
         blank=False,
-        max_length=255
+        max_length=255,
     )
     sp_acs_binding = models.TextField(
         "SP Single Sign-On Binding",
@@ -70,43 +68,41 @@ class SamlProvider(models.Model):
         choices=SAML_PROTOCOL_BINDINGS,
         default=HTTP_POST_BINDING,
         blank=False,
-        max_length=1024
+        max_length=1024,
     )
     debug = models.BooleanField(
-        "Debug",
-        help_text="Enable settings debug messages.",
-        default=False
+        "Debug", help_text="Enable settings debug messages.", default=False
     )
     lowercase_urlencoding = models.BooleanField(
         "Support ADFS",
         help_text="Enable ADFS lowercase Url encoding support.",
-        default=False
+        default=False,
     )
     idp_initiated_auth = models.BooleanField(
         "Allow IdP Initiated Assertions",
         help_text="Accept unsolicited IdP initiated assertions.",
-        default=False
+        default=False,
     )
     sec_want_messages_signed = models.BooleanField(
         "Signed Responses",
         help_text="Require signed responses from the IdP.",
-        default=True
+        default=True,
     )
     sec_want_assertions_signed = models.BooleanField(
         "Signed Assertions",
         help_text="Require signed assertions from the IdP.",
-        default=False
+        default=False,
     )
     sec_want_assertions_encrypted = models.BooleanField(
         "Encrypted Assertions",
         help_text="Require encrypted assertions from the IdP.",
-        default=False
+        default=False,
     )
     attributes = models.JSONField(
         "Attribute Statements",
         help_text="Map attributes from the IdP to User fields.",
         default=dict,
-        blank=True
+        blank=True,
     )
 
     def __str__(self):

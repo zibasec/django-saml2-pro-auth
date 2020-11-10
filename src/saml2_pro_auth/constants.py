@@ -25,5 +25,5 @@ HTTP_POST_BINDING = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
 HTTP_REDIRECT_BINDING = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
 SAML_PROTOCOL_BINDINGS = [
     (HTTP_POST_BINDING, "HTTP-POST"),
-    (HTTP_REDIRECT_BINDING, "HTTP-Redirect")
+    (HTTP_REDIRECT_BINDING, "HTTP-Redirect"),
 ]

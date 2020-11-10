@@ -1,32 +1,48 @@
+from typing import Tuple
+
 from django.conf import settings
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
-from onelogin.saml2.utils import OneLogin_Saml2_Utils
 
+from .models import SamlProvider
 from .settings import app_settings
 
 
 class SAMLError(Exception):
-    pass
+    """
+    Used to indicate errors during SAML request/response processing
+    """
 
 
 class SAMLSettingsError(Exception):
-    pass
+    """
+    Used to indicate errors in the SAML settings
+    """
 
 
-def init_saml_auth(req):
-    try:
-        provider_settings = app_settings.SAML_PROVIDERS[req["get_data"]["provider"]]
-    except KeyError:
-        raise SAMLSettingsError("SAML_PROVIDERS is not defined in settings")
+def init_saml_auth(
+    request, provider_name: str
+) -> Tuple[OneLogin_Saml2_Auth, dict, dict]:
+    """
+    Gets the SAML provider settings and returns a prepared SAML request and OneLogin Auth object
+    """
+    saml_req = prepare_django_request(request)
+    provider_settings, user_map = get_provider_settings(saml_req, provider_name)
+    saml_req["lowercase_urlencoding"] = provider_settings.get(
+        "lowercase_urlencoding", False
+    )
+    saml_req["idp_initiated_auth"] = provider_settings.get("idp_initiated_auth", True)
+    auth = OneLogin_Saml2_Auth(saml_req, provider_settings)
+    return auth, saml_req, user_map
 
-    req["lowercase_urlencoding"] = provider_settings.get("lowercase_urlencoding", False)
-    req["idp_initiated_auth"] = provider_settings.get("idp_initiated_auth", True)
-    auth = OneLogin_Saml2_Auth(req, provider_settings)
-    return auth
 
-
-def prepare_django_request(request):
-    http_host = request.get_host()
+def prepare_django_request(request) -> dict:
+    """
+    Prepares the saml request object from the Django request
+    """
+    if app_settings.SAML_OVERRIDE_HOSTNAME:
+        http_host = app_settings.SAML_OVERRIDE_HOSTNAME
+    else:
+        http_host = request.get_host()
 
     if "HTTP_X_FORWARDED_FOR" in request.META:
         server_port = None
@@ -50,3 +66,44 @@ def prepare_django_request(request):
         results["server_port"] = server_port
 
     return results
+
+
+def get_provider_settings(req: dict, provider_name: str) -> Tuple[dict, dict]:
+    """
+    Returns the provider settings
+    """
+    try:
+        provider_settings = app_settings.SAML_PROVIDERS[provider_name]
+        user_map = app_settings.SAML_USERS_MAP.get(provider_name, dict())
+    except KeyError:
+        try:
+            samlp = SamlProvider.objects.get(provider_slug=provider_name)
+            provider_settings = samlp.get_provider_config(
+                app_settings.SAML_PROVIDER_CONFIG_TEMPLATE
+            )
+            user_map = samlp.attributes
+        except SamlProvider.DoesNotExist as err:
+            raise SAMLSettingsError(
+                "SAML_PROVIDERS is not defined in settings"
+            ) from err
+
+    urls = build_sp_urls(req, provider_name)
+    provider_settings["sp"]["entityId"] = urls["entityId"]
+    provider_settings["sp"]["assertionConsumerService"]["url"] = urls["acs_url"]
+    return provider_settings, user_map
+
+
+def build_sp_urls(req: dict, provider_name: str) -> dict:
+    """
+    Builds and returns the SP entity ID and acs URLs.
+    TODO: Should eventually be expanded to return the SLS/SLO URLs as well.
+    """
+    protocol = "https" if req["https"] == "on" else "http"
+
+    path = f"{app_settings.SAML_ROUTE.strip('/')}/{provider_name}"
+    base_url = f"{protocol}://{req['http_host']}/{path}/"
+    acs_url = f"{base_url}acs/"
+    return {
+        "entityId": base_url,
+        "acs_url": acs_url,
+    }

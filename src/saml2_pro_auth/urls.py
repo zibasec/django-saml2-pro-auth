@@ -1,22 +1,28 @@
-from django.urls import path, register_converter
+from django.shortcuts import redirect
+from django.urls import path, register_converter, reverse_lazy
 
+from .models import SamlProvider
 from .settings import app_settings
-from .views import AcsView, MetadataView, SsoView, metadata, saml_login
+from .views import AcsView, MetadataView, SsoView
 
 SAML_ROUTE = f"{app_settings.SAML_ROUTE.strip('/')}"
-METADATA = f"{SAML_ROUTE}/metadata/"
 
 app_name = "saml2_pro_auth"
 
 
 class ProviderConverter:
-    regex = "[\w-]+"  # pylint: disable=anomalous-backslash-in-string
+    regex = "[a-zA-Z0-9]{3,16}"  # pylint: disable=anomalous-backslash-in-string
 
     def to_python(self, value):
         try:
-            return {value: app_settings.SAML_PROVIDERS[value]}
+            app_settings.SAML_PROVIDERS[value]
         except KeyError:
-            raise ValueError
+            try:
+                SamlProvider.objects.get(provider_slug=value)
+            except SamlProvider.DoesNotExist as err:
+                raise ValueError from err
+
+        return value
 
     def to_url(self, value):
         return value
@@ -27,10 +33,10 @@ register_converter(ProviderConverter, "samlp")
 
 # Class based views
 urlpatterns = [
-    path(f"{SAML_ROUTE}/acs/<samlp:provider>/", AcsView.as_view(), name="acs"),
-    path(f"{SAML_ROUTE}/sso/<samlp:provider>/", SsoView.as_view(), name="sso"),
+    path(f"{SAML_ROUTE}/<samlp:provider>/acs/", AcsView.as_view(), name="acs"),
+    path(f"{SAML_ROUTE}/<samlp:provider>/login/", SsoView.as_view(), name="login"),
     path(
-        f"{SAML_ROUTE}/metadata/<samlp:provider>/",
+        f"{SAML_ROUTE}/<samlp:provider>/metadata/",
         MetadataView.as_view(),
         name="metadata",
     ),
