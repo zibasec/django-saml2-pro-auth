@@ -3,6 +3,8 @@ include README.md
 include Pipfile
 include tox.ini
 include *.yaml
+include manage.py
+include requirements*.txt
 recursive-include tests *.py
 recursive-include tests *.crt
 recursive-include tests *.key

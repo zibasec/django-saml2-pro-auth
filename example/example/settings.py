@@ -80,7 +80,7 @@ WSGI_APPLICATION = "example.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": str(BASE_DIR / "db.sqlite3"),
     }
 }
 
@@ -143,16 +143,16 @@ LOGIN_REDIRECT_URL = "/"
 # }
 
 # SAML2_PRO_AUTH Settings
-# SAML_ROUTE = 'saml/'
+# SAML_ROUTE = '/sso/saml/'
 # SAML_CACHE = "saml2_pro_auth"
 
 SAML_REDIRECT = "/"
 
 SAML_FAIL_REDIRECT = "/"
 
-SAML_USERS_LOOKUP_ATTRIBUTE = "email__iexact"
+SAML_USERS_LOOKUP_ATTRIBUTE = ("username__iexact", "NameId")
 
-SAML_USERS_SYNC_ATTRIBUTES = False
+SAML_USERS_SYNC_ATTRIBUTES = True
 
 SAML_USERS_STRICT_MAPPING = True
 
@@ -301,5 +301,29 @@ SAML_PROVIDERS = {
             "signatureAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha256",
             "digestAlgorithm": "http://www.w3.org/2001/04/xmlenc#sha256",
         },
+    },
+}
+
+# SAML_OVERRIDE_HOSTNAME = "127.0.0.1"
+SAML_PROVIDER_CONFIG_TEMPLATE = {
+    "strict": True,
+    "sp": {
+        "x509cert": open(Path(BASE_DIR, "certs/sp.crt"), "r").read(),
+        "privateKey": open(Path(BASE_DIR, "certs/sp.key"), "r").read(),
+    },
+    "security": {
+        "nameIdEncrypted": False,
+        "authnRequestsSigned": True,
+        "logoutRequestSigned": True,
+        "logoutResponseSigned": True,
+        "signMetadata": True,
+        "wantMessagesSigned": True,
+        "wantAssertionsSigned": False,
+        "wantAssertionsEncrypted": False,
+        "wantNameId": True,
+        "wantNameIdEncrypted": False,
+        "wantAttributeStatement": False,
+        "signatureAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha256",
+        "digestAlgorithm": "http://www.w3.org/2001/04/xmlenc#sha256",
     },
 }

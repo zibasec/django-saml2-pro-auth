@@ -1,6 +1,5 @@
 from typing import Tuple
 
-from django.conf import settings
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
 
 from .models import SamlProvider
@@ -88,6 +87,7 @@ def get_provider_settings(req: dict, provider_name: str) -> Tuple[dict, dict]:
             ) from err
 
     urls = build_sp_urls(req, provider_name)
+    # TODO: Skip if already defined in config
     provider_settings["sp"]["entityId"] = urls["entityId"]
     provider_settings["sp"]["assertionConsumerService"]["url"] = urls["acs_url"]
     return provider_settings, user_map

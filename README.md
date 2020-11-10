@@ -42,7 +42,7 @@ AUTHENTICATION_BACKENDS = [
       'saml2_pro_auth.auth.Backend'
 ]
 
-SAML_ROUTE = 'saml/'
+SAML_ROUTE = '/sso/saml/'
 
 SAML_REDIRECT = '/'
 
@@ -146,7 +146,7 @@ SAML_PROVIDERS = {
 
 **AUTHENTICATION_BACKENDS:** This is required exactly as in the example. It tells Django to use this as a valid auth mechanism.
 
-**SAML_ROUTE (optional, default=/saml/):** This tells Django where to do all SAML related activities. The default route is `/saml/`. You still need to include the source urls in your own `urls.py`. For example:
+**SAML_ROUTE (optional, default=/sso/saml/):** This tells Django where to do all SAML related activities. The default route is `/saml/`. You still need to include the source urls in your own `urls.py`. For example:
 
 ```python
 from django.conf import settings
@@ -177,6 +177,12 @@ If you want to use the old function-based view URLs you can import and use those
 
 ```python
 import saml2_pro_auth.function_urls as saml_urls
+```
+
+**SAML_OVERRIDE_HOSTNAME (optional, default=""):** This allows you to set a specific hostname to be used in SAML requests. The default method to is detect the hostname from the `request` object. This generally works unless you are behind several layers of proxies or other caching layers. For example, running Django inside a Lambda function that is fronted by API Gateway and CloudFront could pose problems. This setting lets you set the value explicitly. The value should be a simple hostname or dotted path. Do not include a full URL, port, scheme, etc.
+
+```python
+SAML_OVERRIDE_HOSTNAME = "app.example.org"
 ```
 
 **SAML_CACHE (optional, default="default"):** This lets you specify a different cache backend configuration if need you a specific type of persistent cache mechanism that differs from the `CACHES["default"]`. A persistent cache is required for only once SAML assertion processing to work. This is an important security mechanism and should not be bypassed. In local development environments, the local memory, dummy, or file caches will work fine. For stateless or multi-server high availability environments you will want to use a shared, persistent cache. Storing this in the Database is likely the easiest solution since the data is small and the number of requests should be minimal.
@@ -236,20 +242,19 @@ SAML_USERS_MAP = {
     }
 ```
 
-**SAML_USERS_LOOKUP_ATTRIBUTE (optional):**
-Specifies the User model field to be used for object lookup in the database.
-Has to be one of the dict keys for the Django's User model specified in "SAML_USERS_MAP".
+**SAML_USERS_LOOKUP_ATTRIBUTE (optional, default=("username": "NameId")):**
+A tuple that specifies the User model field and lookup type to be used for object lookup in the database, along with the attribute to match. It defaults to matching `username` to the `NameId` sent from the IdP. If you want to match against a different database field you would update the `key`, if you want to use a different attribute from the IdP you would update the `value`.
 
-The attribute in the Django User model should have the "unique" flag set.
+The attribute you match on in the Django User model should have the "unique" flag set.
 (In the default User model in django only username has a unique contstraint in the DB, the same email could be used by multiple users)
 
 This can also include Django field lookup extensions. By default the lookup will be performed as an exact match. If you
-have an identity provider that sends case sensitive emails and you still want them to match emails in your database you can use `email__iexact`. Anything before the double underscore will be used as the field name, everything after is used in the Django Query field lookup.
+have an identity provider that sends case sensitive emails and you are storing the email in the `username` field you can still match emails in your database by using `username__iexact`. Anything before the double underscore will be used as the field name, everything after is used in the Django Query field lookup.
 
-Defaults to "username"
+Defaults to `("username": "NameId")`
 
 ```python
-SAML_USERS_LOOKUP_ATTRIBUTE = "email"
+SAML_USERS_LOOKUP_ATTRIBUTE = ("username__iexact": "NameId")
 ```
 
 **SAML_USERS_SYNC_ATTRIBUTES (optional):**
@@ -296,6 +301,45 @@ Defaults to True
 
 ```python
 SAML_AUTO_CREATE_USERS = False
+```
+
+**SAML_PROVIDER_CONFIG_TEMPLATE** This is a base template to use for any `SamlProvider` model instances if you are using the settings model class. You can override any settings in this template to set your base configuration. This also helps you to stay DRY.
+
+```python
+PROVIDER_CONFIG_TEMPLATE = {
+    "strict": True,
+    "sp": {
+        "x509cert": "",
+        "privateKey": "",
+    },
+    # No one actually sets these fields in their metadata
+    # "organization": {
+    #     "en-US": {
+    #         "name": "",
+    #         "displayname": "",
+    #         "url": "",
+    #     }
+    # },
+    # "contactPerson": {
+    #     "technical": {"givenName": "", "emailAddress": ""},
+    #     "support": {"givenName": "", "emailAddress": ""},
+    # },
+    "security": {
+        "nameIdEncrypted": False,
+        "authnRequestsSigned": True,
+        "logoutRequestSigned": True,
+        "logoutResponseSigned": True,
+        "signMetadata": True,
+        "wantMessagesSigned": True,
+        "wantAssertionsSigned": False,
+        "wantAssertionsEncrypted": False,
+        "wantNameId": True,
+        "wantNameIdEncrypted": False,
+        "wantAttributeStatement": False,
+        "signatureAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha256",
+        "digestAlgorithm": "http://www.w3.org/2001/04/xmlenc#sha256",
+    },
+}
 ```
 
 **SAML_PROVIDERS:** This is an extended version of the OneLogin spec [python-saml and python3-saml packages](https://github.com/onelogin/python3-saml#settings). The big difference is here you supply a dict of settings dicts where the top most key(s) must map 1:1 to the top most keys in `SAML_USERS_MAP`. Also, this package allows you to ref the cert/key files via `open()` calls. This is to allow those of you with multiple external customers to login to your platform with any N number of IdPs.

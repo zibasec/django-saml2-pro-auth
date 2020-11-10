@@ -1,7 +1,6 @@
 from django.contrib.auth import REDIRECT_FIELD_NAME, authenticate, login
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseServerError
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import View

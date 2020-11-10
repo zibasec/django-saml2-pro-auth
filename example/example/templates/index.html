@@ -36,17 +36,17 @@
     <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
   </span>
 </div>
-  <div class="alert alert-danger" role="alert">
-    <strong>Errors:</strong>
-    <ul class="list-unstyled">
-        {% for err in errors %}
-          <li>{{err}}</li>
-        {% endfor %}
-    </ul>
-    {% if error_reason %}
-      <p><b>Reason:</b> {{error_reason}}</p>
-    {% endif %}
-  </div>
+<div class="alert alert-danger" role="alert">
+  <strong>Errors:</strong>
+  <ul class="list-unstyled">
+      {% for err in errors %}
+        <li>{{err}}</li>
+      {% endfor %}
+  </ul>
+  {% if error_reason %}
+    <p><b>Reason:</b> {{error_reason}}</p>
+  {% endif %}
+</div>
 {% endif %}
 
 {% if not request.user.is_authenticated %}
@@ -67,11 +67,9 @@
 </div>
 {% endif %}
 
-<div>
-<br>
-<br>
-
+<div class="container mx-auto">
 {% if request.user.is_authenticated %}
+  <div class="container mx-auto">
   {% if request.session.samlUserdata %}
     <table class="table-auto">
       <thead>
@@ -101,17 +99,25 @@
     </span>
   </div>
   {% endif %}
+  </div>
   <br>
   <br>
-
-  <a class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded"  href="{% url 'index' %}">Logout (SLO Not Implemented)</a>
+  <a class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded space-y-6"  href="{% url 'logout' %}">Logout (SLO Not Implemented)</a>
 {% else %}
-  <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="{% url 'saml:sso' provider='oktaProvider' %}">Login Okta</a>
-  <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="{% url 'saml:sso' provider='gsuiteProvider' %}">Login GSuite</a>
-{% endif %}
-
-<a class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" href="{% url 'saml:metadata' provider='oktaProvider' %}">Okta Provider Metadata</a>
-<a class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" href="{% url 'saml:metadata' provider='gsuiteProvider' %}">Gsuite Provider Metadata</a>
+<div class="flex py-4">
+  <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="{% url 'saml2_pro_auth:login' provider='oktaProvider' %}">Login Okta</a>
+  <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="{% url 'saml2_pro_auth:login' provider='gsuiteProvider' %}">Login GSuite</a>
+  {% for provider in object_list %}
+  <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="{% url 'saml2_pro_auth:login' provider=provider.provider_slug %}">{{provider.name}}</a>
+  {% endfor %}
 </div>
-
+{% endif %}
+</div>
+<div class="flex py-4">
+  <a class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" href="{% url 'saml2_pro_auth:metadata' provider='oktaProvider' %}">Okta Provider Metadata</a>
+  <a class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" href="{% url 'saml2_pro_auth:metadata' provider='gsuiteProvider' %}">Gsuite Provider Metadata</a>
+  {% for provider in object_list %}
+  <a class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" href="{% url 'saml2_pro_auth:metadata' provider=provider.provider_slug %}">{{provider.name}} Metadata</a>
+  {% endfor %}
+</div>
 {% endblock %}

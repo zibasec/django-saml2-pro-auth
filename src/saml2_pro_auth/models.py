@@ -2,7 +2,6 @@ import uuid
 from copy import deepcopy
 
 from django.db import models
-from django.urls import reverse
 from django.utils.crypto import get_random_string
 
 from .constants import (
@@ -11,7 +10,6 @@ from .constants import (
     SAML_PROTOCOL_BINDINGS,
     UNSPECIFIED,
 )
-from .settings import app_settings
 
 
 def make_provider_slug():

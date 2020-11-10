@@ -1,5 +1,4 @@
-from django.shortcuts import redirect
-from django.urls import path, register_converter, reverse_lazy
+from django.urls import path, register_converter
 
 from .models import SamlProvider
 from .settings import app_settings
