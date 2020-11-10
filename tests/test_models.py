@@ -1,6 +1,4 @@
 from django.test import TestCase
-from django.urls import resolve
-from django.urls.exceptions import Resolver404
 
 from saml2_pro_auth.models import SamlProvider
 from saml2_pro_auth.settings import PROVIDER_CONFIG_TEMPLATE
@@ -20,17 +18,6 @@ class SamlProviderModelTest(TestCase):
     def test_object_name_is_name(self):
         provider = SamlProvider.objects.get(name="TestProvider")
         self.assertEqual(provider.name, str(provider))
-
-    def test_get_provider_url(self):
-        provider = SamlProvider.objects.get(name="TestProvider")
-        self.assertEqual(
-            resolve(f"/sso/saml/{provider.provider_slug}/acs/").view_name,
-            "saml2_pro_auth:acs",
-        )
-        self.assertEqual(
-            resolve(provider.get_absolute_url()).view_name, "saml2_pro_auth:base"
-        )
-        self.assertRaises(Resolver404, resolve, "/sso/saml/junkname/acs/")
 
     def test_get_provider_config(self):
         provider = SamlProvider.objects.get(name="TestProvider")

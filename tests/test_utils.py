@@ -15,7 +15,7 @@ class TestUtils(TestCase):
         request = factory.get(
             "/sso/saml/?provider=classProvider", **dict(HTTP_HOST="example.com")
         )
-        auth_obj, req = init_saml_auth(request, "classProvider")
+        auth_obj, req, user_map = init_saml_auth(request, "classProvider")
         self.assertTrue(isinstance(auth_obj, onelogin.saml2.auth.OneLogin_Saml2_Auth))
         self.assertTrue(isinstance(req, dict))
 

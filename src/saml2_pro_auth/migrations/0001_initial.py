@@ -2,7 +2,16 @@
 
 import uuid
 
+from django.conf import settings
 from django.db import migrations, models
+
+try:
+    from django.db.models import JSONField
+except ImportError:
+    if "sqlite" in settings.DATABASES["default"]["ENGINE"]:
+        from saml2_pro_auth.json_field import JSONField
+    else:
+        from django.contrib.postgres.fields import JSONField
 
 import saml2_pro_auth.models
 
@@ -197,7 +206,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "attributes",
-                    models.JSONField(
+                    JSONField(
                         blank=True,
                         default=dict,
                         help_text="Map attributes from the IdP to User fields.",

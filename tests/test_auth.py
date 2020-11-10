@@ -27,10 +27,10 @@ class TestAuth(TestCase):
         user_map = {"email": "Email", "name": "Username"}
 
         saml_map = {
-            "Username": "montypython",
-            "lastName": "Cleese",
-            "Email": "montypython@example.com",
-            "firstName": "John",
+            "Username": ["montypython"],
+            "lastName": ["Cleese"],
+            "Email": ["montypython@example.com"],
+            "firstName": ["John"],
         }
 
         merged_map = get_clean_map(user_map, saml_map)
@@ -46,10 +46,10 @@ class TestAuth(TestCase):
 
         saml_map = {
             "Username": ["", "montypython"],
-            "lastName": "Cleese",
-            "Email": "montypython@example.com",
-            "firstName": "John",
-            "Client": "examplecorp",
+            "lastName": ["Cleese"],
+            "Email": ["montypython@example.com"],
+            "firstName": ["John"],
+            "Client": ["examplecorp"],
         }
 
         merged_map = get_clean_map(user_map, saml_map)
@@ -66,10 +66,10 @@ class TestAuth(TestCase):
 
         saml_map = {
             "Username": ["", "montypython"],
-            "lastName": "Cleese",
-            "Email": "montypython@example.com",
-            "firstName": "John",
-            "Client": "examplecorp",
+            "lastName": ["Cleese"],
+            "Email": ["montypython@example.com"],
+            "firstName": ["John"],
+            "Client": ["examplecorp"],
         }
 
         self.assertRaises(SAMLSettingsError, get_clean_map, user_map, saml_map)
@@ -103,10 +103,10 @@ class TestAuth(TestCase):
         }
 
         saml_map = {
-            "Username": "montypython",
-            "lastName": "Cleese",
-            "Email": "montypython@example.com",
-            "firstName": "John",
+            "Username": ["montypython"],
+            "lastName": ["Cleese"],
+            "Email": ["montypython@example.com"],
+            "firstName": ["John"],
         }
 
         merged_map = get_clean_map(user_map, saml_map)
@@ -125,10 +125,10 @@ class TestAuth(TestCase):
 
         saml_map = {
             "Username": ["", "montypython"],
-            "lastName": "Cleese",
-            "Email": "montypython@example.com",
-            "firstName": "John",
-            "Client": "examplecorp",
+            "lastName": ["Cleese"],
+            "Email": ["montypython@example.com"],
+            "firstName": ["John"],
+            "Client": ["examplecorp"],
         }
 
         merged_map = get_clean_map(user_map, saml_map)
@@ -148,10 +148,10 @@ class TestAuth(TestCase):
 
         saml_map = {
             "Username": ["", "montypython"],
-            "lastName": "Cleese",
-            "Email": "montypython@example.com",
-            "firstName": "John",
-            "Client": "examplecorp",
+            "lastName": ["Cleese"],
+            "Email": ["montypython@example.com"],
+            "firstName": ["John"],
+            "Client": ["examplecorp"],
         }
 
         merged_map = get_clean_map(user_map, saml_map)

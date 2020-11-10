@@ -1,8 +1,17 @@
 import uuid
 from copy import deepcopy
 
+from django.conf import settings
 from django.db import models
 from django.utils.crypto import get_random_string
+
+try:
+    from django.db.models import JSONField
+except ImportError:
+    if "sqlite" in settings.DATABASES["default"]["ENGINE"]:
+        from .json_field import JSONField
+    else:
+        from django.contrib.postgres.fields import JSONField
 
 from .constants import (
     HTTP_POST_BINDING,
@@ -96,7 +105,7 @@ class SamlProvider(models.Model):
         help_text="Require encrypted assertions from the IdP.",
         default=False,
     )
-    attributes = models.JSONField(
+    attributes = JSONField(
         "Attribute Statements",
         help_text="Map attributes from the IdP to User fields.",
         default=dict,
