@@ -8,7 +8,7 @@ from onelogin.saml2.errors import OneLogin_Saml2_Error
 from onelogin.saml2.utils import OneLogin_Saml2_Utils
 
 from .settings import app_settings
-from .utils import SAMLError, SAMLSettingsError, init_saml_auth, prepare_django_request
+from .utils import SAMLError, SAMLSettingsError, init_saml_auth
 
 
 class GenericSamlView(View):
@@ -67,8 +67,18 @@ class AcsView(GenericSamlView):
                 user_map=user_map,
             )
             if user is not None:
-                login(request, user)
-
+                try:
+                    login(request, user)
+                except (ValueError, TypeError):
+                    error_reason = "Bad Request"
+                    if auth.get_settings().is_debug_active():
+                        error_reason = "Login Failed"
+                    response = HttpResponseBadRequest("%s" % error_reason)
+                # Only write data into the session if everything is successful
+                # and the user is logged in
+                request.session["samlUserdata"] = auth.get_attributes()
+                request.session["samlNameId"] = auth.get_nameid()
+                request.session["samlSessionIndex"] = auth.get_session_index()
                 if app_settings.SAML_REDIRECT:
                     response = redirect(app_settings.SAML_REDIRECT)
                 elif (
@@ -82,8 +92,10 @@ class AcsView(GenericSamlView):
                 else:
                     response = redirect(OneLogin_Saml2_Utils.get_self_url(req))
             else:
-                request.session.flush()
-                response = redirect(app_settings.SAML_FAIL_REDIRECT)
+                error_reason = "Bad Request"
+                if auth.get_settings().is_debug_active():
+                    error_reason = "User lookup Failed"
+                response = HttpResponseBadRequest("%s" % error_reason)
 
         else:
             error_reason = "Bad Request"

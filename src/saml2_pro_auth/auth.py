@@ -116,10 +116,6 @@ class Backend:  # pragma: no cover
             return None
 
         if self.user_can_authenticate(user):
-            # Only write data into the session if everything is successful and the user can auth
-            request.session["samlUserdata"] = saml_auth.get_attributes()
-            request.session["samlNameId"] = saml_auth.get_nameid()
-            request.session["samlSessionIndex"] = saml_auth.get_session_index()
             return user
 
     def get_user(self, user_id):

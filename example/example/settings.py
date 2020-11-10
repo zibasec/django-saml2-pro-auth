@@ -143,18 +143,17 @@ LOGIN_REDIRECT_URL = "/"
 # }
 
 # SAML2_PRO_AUTH Settings
-# SAML_ROUTE = '/sso/saml/'
 # SAML_CACHE = "saml2_pro_auth"
 
 SAML_REDIRECT = "/"
-
-SAML_FAIL_REDIRECT = "/"
 
 SAML_USERS_LOOKUP_ATTRIBUTE = ("username__iexact", "NameId")
 
 SAML_USERS_SYNC_ATTRIBUTES = True
 
 SAML_USERS_STRICT_MAPPING = False
+
+SAML_AUTO_CREATE_USERS = False
 
 SAML_USERS_MAP = {
     "exampleProvider": {

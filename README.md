@@ -42,11 +42,7 @@ AUTHENTICATION_BACKENDS = [
       'saml2_pro_auth.auth.Backend'
 ]
 
-SAML_ROUTE = '/sso/saml/'
-
 SAML_REDIRECT = '/'
-
-SAML_FAIL_REDIRECT = '/login_failed'
 
 SAML_USERS_MAP = {
     "MyProvider" : {
@@ -204,8 +200,6 @@ CACHES = {
 **SAML_REPLAY_PROTECTION (optional, default=True):** This allows you to disable the only-once assertion processing protection (SAML assertion replay protection) mechanism. It currently relies on a shared persistent caching mechanism that may not be feasible in all environments. It is strongly recommend you to keep this enabled but if there are architectural reasons or there is a low risk of replay attacks then it can still be disabled.
 
 **SAML_REDIRECT (optional, default=None):** This tells the auth backend where to redirect users after they've logged in via the IdP. **NOTE**: This is not needed for _most_ users. Order of precedence is: SAML_REDIRECT value (if defined), RELAY_STATE provided in the SAML response, and the fallback is simply to go to the root path of your application.
-
-**SAML_FAIL_REDIRECT (optional, default=None):** This tells the auth backend where to redirect when the SAML authentication fails on the Django side. When using the supplied backend this can happen when a user is marked with is_active=False in the Django DB while still being able to authenticate with the IdP. When SAML_FAIl_REDIRECT has not been set, a SAMLError is raised to avoid redirect loops.
 
 **SAML_USERS_MAP (required):** This is a dict of user attribute mapping dicts. This is what makes it possible to map the attributes as they come from your IdP into attributes that are part of your User model in Django. There a few ways you can define this. The dict keys (the left-side) are the attributes as defined in YOUR User model, the dict values (the right-side) are the attributes as supplied by your IdP.
 

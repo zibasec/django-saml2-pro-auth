@@ -46,12 +46,6 @@ class Settings:
         return getattr(settings, "SAML_REDIRECT", "")
 
     @property
-    def SAML_FAIL_REDIRECT(self):
-        return getattr(
-            settings, "SAML_FAIL_REDIRECT", getattr(settings, "LOGIN_REDIRECT_URL", "/")
-        )
-
-    @property
     def SAML_USERS_LOOKUP_ATTRIBUTE(self):
         return getattr(settings, "SAML_USERS_LOOKUP_ATTRIBUTE", ("username", "NameId"))
 
