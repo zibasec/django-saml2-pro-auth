@@ -108,7 +108,7 @@
   <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="{% url 'saml2_pro_auth:login' provider='oktaProvider' %}">Login Okta</a>
   <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="{% url 'saml2_pro_auth:login' provider='gsuiteProvider' %}">Login GSuite</a>
   {% for provider in object_list %}
-  <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="{% url 'saml2_pro_auth:login' provider=provider.provider_slug %}">{{provider.name}}</a>
+  <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="{% url 'saml2_pro_auth:login' provider=provider.id %}">{{provider.name}}</a>
   {% endfor %}
 </div>
 {% endif %}
@@ -117,7 +117,7 @@
   <a class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" href="{% url 'saml2_pro_auth:metadata' provider='oktaProvider' %}">Okta Provider Metadata</a>
   <a class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" href="{% url 'saml2_pro_auth:metadata' provider='gsuiteProvider' %}">Gsuite Provider Metadata</a>
   {% for provider in object_list %}
-  <a class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" href="{% url 'saml2_pro_auth:metadata' provider=provider.provider_slug %}">{{provider.name}} Metadata</a>
+  <a class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" href="{% url 'saml2_pro_auth:metadata' provider=provider.id %}">{{provider.name}} Metadata</a>
   {% endfor %}
 </div>
 {% endblock %}

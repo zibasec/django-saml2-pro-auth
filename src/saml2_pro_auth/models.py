@@ -3,7 +3,6 @@ from copy import deepcopy
 
 from django.conf import settings
 from django.db import models
-from django.utils.crypto import get_random_string
 
 try:
     from django.db.models import JSONField
@@ -21,15 +20,8 @@ from .constants import (
 )
 
 
-def make_provider_slug():
-    return get_random_string(length=16)
-
-
 class SamlProvider(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    provider_slug = models.SlugField(
-        max_length=16, unique=True, editable=False, default=make_provider_slug
-    )
     name = models.CharField(
         "Name",
         help_text="A descriptive name for the provider configuration.",

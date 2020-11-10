@@ -63,7 +63,6 @@ class AcsView(GenericSamlView):
         if not errors:
             user = authenticate(
                 request=request,
-                provider=kwargs["provider"],
                 saml_auth=auth,
                 user_map=user_map,
             )

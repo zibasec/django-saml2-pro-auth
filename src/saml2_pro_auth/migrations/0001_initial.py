@@ -13,8 +13,6 @@ except ImportError:
     else:
         from django.contrib.postgres.fields import JSONField
 
-import saml2_pro_auth.models
-
 
 class Migration(migrations.Migration):
 
@@ -33,15 +31,6 @@ class Migration(migrations.Migration):
                         editable=False,
                         primary_key=True,
                         serialize=False,
-                    ),
-                ),
-                (
-                    "provider_slug",
-                    models.SlugField(
-                        default=saml2_pro_auth.models.make_provider_slug,
-                        editable=False,
-                        max_length=16,
-                        unique=True,
                     ),
                 ),
                 (

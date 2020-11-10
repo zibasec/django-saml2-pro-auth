@@ -1,3 +1,5 @@
+import uuid
+
 from django.urls import path, register_converter
 
 from .models import SamlProvider
@@ -8,15 +10,15 @@ app_name = "saml2_pro_auth"
 
 
 class ProviderConverter:
-    regex = "[a-zA-Z0-9]{3,16}"  # pylint: disable=anomalous-backslash-in-string
+    regex = "[a-zA-Z0-9-]{4,36}"  # pylint: disable=anomalous-backslash-in-string
 
     def to_python(self, value):
         try:
             app_settings.SAML_PROVIDERS[value]
         except KeyError:
             try:
-                SamlProvider.objects.get(provider_slug=value)
-            except SamlProvider.DoesNotExist as err:
+                SamlProvider.objects.get(pk=uuid.UUID(value))
+            except (SamlProvider.DoesNotExist, ValueError) as err:
                 raise ValueError from err
 
         return value

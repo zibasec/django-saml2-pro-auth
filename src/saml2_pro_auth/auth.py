@@ -54,8 +54,8 @@ class Backend:  # pragma: no cover
         is_active = getattr(user, "is_active", None)
         return is_active or is_active is None
 
-    def authenticate(self, request, provider=None, saml_auth=None, user_map=dict()):
-        if not provider or not saml_auth:
+    def authenticate(self, request, saml_auth=None, user_map=dict()):
+        if not saml_auth:
             return None
 
         assertion_id = saml_auth.get_last_assertion_id()
