@@ -131,19 +131,19 @@ LOGIN_URL = "login/"
 LOGIN_REDIRECT_URL = "/"
 
 # TODO: Uncomment and use the below if you want to use this with a database backed cache.
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-#     },
-#     'saml2_pro_auth': {
-#         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-#         'LOCATION': 'saml2_pro_auth_cache',
-#         'TIMEOUT': 300,
-#     }
-# }
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    },
+    'saml2_pro_auth': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'saml2_pro_auth_cache',
+        'TIMEOUT': 300,
+    }
+}
 
 # SAML2_PRO_AUTH Settings
-# SAML_CACHE = "saml2_pro_auth"
+SAML_CACHE = "saml2_pro_auth"
 
 SAML_REDIRECT = "/"
 
