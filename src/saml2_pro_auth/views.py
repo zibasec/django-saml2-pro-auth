@@ -1,5 +1,6 @@
 from django.contrib.auth import REDIRECT_FIELD_NAME, authenticate, login
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseServerError
+from django.core.exceptions import SuspiciousOperation
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -11,13 +12,17 @@ from .settings import app_settings
 from .utils import SAMLError, SAMLSettingsError, init_saml_auth
 
 
+class SamlBadRequest(SuspiciousOperation):
+    pass
+
+
 class GenericSamlView(View):
     def dispatch(self, request, *args, **kwargs):
         """Initialize attributes shared by all view methods."""
         try:
             auth, req, user_map = init_saml_auth(request, kwargs["provider"])
-        except (SAMLError, SAMLSettingsError, KeyError):
-            return HttpResponseServerError("Invalid request or provider settings")
+        except (SAMLError, SAMLSettingsError, KeyError) as err:
+            raise SAMLError("Invalid request or provider settings") from err
 
         kwargs["saml_auth"] = auth
         kwargs["saml_req"] = req
@@ -32,13 +37,13 @@ class MetadataView(GenericSamlView):
         saml_settings = kwargs["saml_auth"].get_settings()
         try:
             metadata_doc = saml_settings.get_sp_metadata()
-        except OneLogin_Saml2_Error:
-            return HttpResponseServerError("Invalid SP metadata")
+        except OneLogin_Saml2_Error as err:
+            raise SAMLError("Invalid SP metadata") from err
 
         errors = saml_settings.validate_metadata(metadata_doc)
 
         if errors:
-            return HttpResponseServerError(content=", ".join(errors))
+            raise SAMLError(", ".join(errors))
 
         return HttpResponse(content=metadata_doc, content_type="text/xml")
 
@@ -55,7 +60,7 @@ class AcsView(GenericSamlView):
             "sp_auth", default=None, salt="saml2_pro_auth.authnrequestid", max_age=300
         )
         if not req["idp_initiated_auth"] and request_id is None:
-            return HttpResponseBadRequest("Bad Request")
+            raise SamlBadRequest("Bad Request")
 
         auth.process_response(request_id=request_id)
         errors = auth.get_errors()
@@ -73,7 +78,8 @@ class AcsView(GenericSamlView):
                     error_reason = "Bad Request"
                     if auth.get_settings().is_debug_active():
                         error_reason = "Login Failed"
-                    response = HttpResponseBadRequest("%s" % error_reason)
+                    raise SamlBadRequest("%s" % error_reason)
+
                 # Only write data into the session if everything is successful
                 # and the user is logged in
                 request.session["samlUserdata"] = auth.get_attributes()
@@ -95,13 +101,13 @@ class AcsView(GenericSamlView):
                 error_reason = "Bad Request"
                 if auth.get_settings().is_debug_active():
                     error_reason = "User lookup Failed"
-                response = HttpResponseBadRequest("%s" % error_reason)
+                raise SamlBadRequest("%s" % error_reason)
 
         else:
             error_reason = "Bad Request"
             if auth.get_settings().is_debug_active():
                 error_reason = auth.get_last_error_reason()
-            response = HttpResponseBadRequest("%s" % error_reason)
+            raise SamlBadRequest("%s" % error_reason)
 
         response.delete_cookie("sp_auth")
         return response
