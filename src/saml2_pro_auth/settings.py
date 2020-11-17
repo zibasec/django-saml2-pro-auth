@@ -43,7 +43,7 @@ class Settings:
 
     @property
     def SAML_REDIRECT(self):
-        return getattr(settings, "SAML_REDIRECT", "")
+        return getattr(settings, "SAML_REDIRECT", "/")
 
     @property
     def SAML_USERS_LOOKUP_ATTRIBUTE(self):

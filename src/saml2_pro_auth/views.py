@@ -85,15 +85,10 @@ class AcsView(GenericSamlView):
                 request.session["samlUserdata"] = auth.get_attributes()
                 request.session["samlNameId"] = auth.get_nameid()
                 request.session["samlSessionIndex"] = auth.get_session_index()
-                if app_settings.SAML_REDIRECT:
-                    response = redirect(app_settings.SAML_REDIRECT)
-                elif (
-                    "RelayState" in req["post_data"]
-                    and OneLogin_Saml2_Utils.get_self_url(req)
-                    != req["post_data"]["RelayState"]
-                ):
+                relay_state = req["post_data"].get("RelayState", app_settings.SAML_REDIRECT) or "/"
+                if relay_state and OneLogin_Saml2_Utils.get_self_url(req) != relay_state:
                     response = redirect(
-                        auth.redirect_to(req["post_data"]["RelayState"])
+                        auth.redirect_to(relay_state)
                     )
                 else:
                     response = redirect(OneLogin_Saml2_Utils.get_self_url(req))
@@ -120,9 +115,7 @@ class SsoView(GenericSamlView):
         # SP-SSO start request
         auth = kwargs["saml_auth"]
         req = kwargs["saml_req"]
-        return_to = app_settings.SAML_REDIRECT or req["get_data"].get(
-            REDIRECT_FIELD_NAME, ""
-        )
+        return_to = req["get_data"].get(REDIRECT_FIELD_NAME, app_settings.SAML_REDIRECT) or "/"
         saml_request = auth.login(return_to=return_to)
         response = redirect(saml_request)
         response.set_signed_cookie(
