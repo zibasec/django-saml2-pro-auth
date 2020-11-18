@@ -1,0 +1,18 @@
+# Minimal requirements file
+# These should install the rest (Django, python3-saml, xmlsec, etc)
+-e .
+whitenoise
+tox
+check-manifest
+pylint
+pylint-common
+pylint-django
+twine
+coverage
+pytest
+pytest-django
+pytest-cov
+pre-commit
+isort
+black==20.8b1
+tox-factor
