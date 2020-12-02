@@ -109,7 +109,9 @@ class Backend:  # pragma: no cover
                 user = UserModel._default_manager.get(**lookup_map)
                 if sync_attributes:
                     try:
-                        user.update(**final_map)
+                        for key, val in final_map.items():
+                            setattr(user, key, val)
+                        user.save()
                     except Exception:
                         pass
         except Exception as err:
