@@ -236,7 +236,7 @@ SAML_USERS_MAP = {
     }
 ```
 
-**SAML_USERS_LOOKUP_ATTRIBUTE (optional, default=("username": "NameId")):**
+**SAML_USERS_LOOKUP_ATTRIBUTE (optional, default=("username", "NameId")):**
 A tuple that specifies the User model field and lookup type to be used for object lookup in the database, along with the attribute to match. It defaults to matching `username` to the `NameId` sent from the IdP. If you want to match against a different database field you would update the `key`, if you want to use a different attribute from the IdP you would update the `value`.
 
 The attribute you match on in the Django User model should have the "unique" flag set.
@@ -245,10 +245,10 @@ The attribute you match on in the Django User model should have the "unique" fla
 This can also include Django field lookup extensions. By default the lookup will be performed as an exact match. If you
 have an identity provider that sends case sensitive emails and you are storing the email in the `username` field you can still match emails in your database by using `username__iexact`. Anything before the double underscore will be used as the field name, everything after is used in the Django Query field lookup.
 
-Defaults to `("username": "NameId")`
+Defaults to `("username", "NameId")`
 
 ```python
-SAML_USERS_LOOKUP_ATTRIBUTE = ("username__iexact": "NameId")
+SAML_USERS_LOOKUP_ATTRIBUTE = ("username__iexact", "NameId")
 ```
 
 **SAML_USERS_SYNC_ATTRIBUTES (optional):**
