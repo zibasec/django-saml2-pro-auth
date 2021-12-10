@@ -84,10 +84,15 @@ class Backend:  # pragma: no cover
         if isinstance(lookup_attr, str):
             lookup_map = {lookup_attr: saml_auth.get_nameid()}
         elif isinstance(lookup_attr, (tuple, list)):
-            if lookup_attr[1] == "NameId":
-                lookup_map = {lookup_attr[0]: saml_auth.get_nameid()}
+            lookup_val = lookup_attr[1]
+            lookup_res = None
+            if lookup_val == "NameId":
+                lookup_res = saml_auth.get_nameid()
+            elif callable(lookup_val):
+                lookup_res = lookup_val(saml_auth, final_map)
             else:
-                lookup_map = {lookup_attr[0]: final_map[lookup_attr[1]]}
+                final_map[lookup_val]
+            lookup_map = { lookup_attr[0]: lookup_res }
         else:
             raise SAMLSettingsError(
                 "The value of SAML_USERS_LOOKUP_ATTRIBUTE must be a str, tuple, or list"
